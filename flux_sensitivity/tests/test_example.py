@@ -14,9 +14,9 @@ RESOURCE_DIR = pkg_resources.resource_filename(
 )
 
 
-def test_resources():
-    RES = {}
-    for p in glob.glob(os.path.join(RESOURCE_DIR, "*.csv")):
+def read_resources(resource_dir):
+    resources = {}
+    for p in glob.glob(os.path.join(resource_dir, "*.csv")):
         fname = os.path.basename(p)
         fname = os.path.splitext(fname)[0]
 
@@ -24,6 +24,11 @@ def test_resources():
         if len(a.shape) == 2:
             if a.shape[1] == 1:
                 a = a.reshape((a.shape[0],))
-        RES[fname] = a
+        resources[fname] = a
+    return resources
+
+
+def test_resources():
+    RES = read_resources(resource_dir=RESOURCE_DIR)
 
     print(RES)
