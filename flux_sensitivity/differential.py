@@ -2,7 +2,6 @@ import numpy as np
 import os
 import propagate_uncertainties
 import binning_utils
-from . import integral_sensitivity
 from . import critical_rate
 
 
