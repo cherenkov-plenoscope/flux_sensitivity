@@ -57,4 +57,3 @@ def test_resources():
 
     for dk in flux_sensitivity.differential.SCENARIOS:
         pass
-

@@ -17,11 +17,13 @@ setuptools.setup(
     author="Sebastian Achim Mueller",
     author_email="sebastian-achim.mueller@mpi-hd.mpg.de",
     packages=["flux_sensitivity",],
-    package_data={"flux_sensitivity": [os.path.join("tests", "resources", "*")]},
+    package_data={
+        "flux_sensitivity": [os.path.join("tests", "resources", "*")]
+    },
     install_requires=[
-        'binning_utils_sebastian-achim-mueller',
-        'confusion_matrix_sebastian-achim-mueller>=0.0.2',
-        'propagate_uncertainties_sebastian-achim-mueller',
+        "binning_utils_sebastian-achim-mueller",
+        "confusion_matrix_sebastian-achim-mueller>=0.0.2",
+        "propagate_uncertainties_sebastian-achim-mueller",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
