@@ -55,6 +55,6 @@ for pk in ["proton", "electron", "helium"]:
 def test_resources():
     print(dFdE_per_m2_per_sr_per_GeV_per_s)
 
-    for dk in flux_sensitivity.differential_sensitivity.SCENARIOS:
-
+    for dk in flux_sensitivity.differential.SCENARIOS:
+        pass
 
