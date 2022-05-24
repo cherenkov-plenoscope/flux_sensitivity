@@ -1,6 +1,7 @@
 import numpy as np
 import os
-import propagate_uncertainties as pru
+import propagate_uncertainties
+import binning_utils
 from . import integral_sensitivity
 from . import critical_rate
 
@@ -255,11 +256,13 @@ def make_area_in_reco_energy(
         tmp_au = np.zeros(num_bins)
 
         for et in range(num_bins):
-            tmp[et], tmp_au[et] = pru.prod(
+            tmp[et], tmp_au[et] = propagate_uncertainties.prod(
                 x=[G[et, er], A[et],], x_au=[G_au[et, er], A_au[et],],
             )
 
-        A_out[er], A_out_au[er] = pru.sum(x=tmp, x_au=tmp_au)
+        A_out[er], A_out_au[er] = propagate_uncertainties.sum(
+            x=tmp, x_au=tmp_au
+        )
     return A_out, A_out_au
 
 
@@ -288,11 +291,122 @@ def integrate_rates_in_reco_energy_with_mask(
         tmp_sum = np.zeros(num_energy_bins)
         tmp_sum_au = np.zeros(num_energy_bins)
         for etrue in range(num_energy_bins):
-            tmp_sum[etrue], tmp_sum_au[etrue] = pru.prod(
+            tmp_sum[etrue], tmp_sum_au[etrue] = propagate_uncertainties.prod(
                 x=[imask[ereco, etrue], Rreco[etrue],],
                 x_au=[imask_au[ereco, etrue], Rreco_au[etrue],],
             )
-        Rreco_total[ereco], Rreco_total_au[ereco] = pru.sum(
-            x=tmp_sum, x_au=tmp_sum_au
-        )
+        (
+            Rreco_total[ereco],
+            Rreco_total_au[ereco],
+        ) = propagate_uncertainties.sum(x=tmp_sum, x_au=tmp_sum_au)
     return Rreco_total, Rreco_total_au
+
+
+def assert_energy_reco_given_true_ax0true_ax1reco_is_normalized(
+    energy_reco_given_true_ax0true_ax1reco, margin=1e-2
+):
+    M = energy_reco_given_true_ax0true_ax1reco
+    assert M.shape[0] == M.shape[1]
+    num_energy_bins = M.shape[0]
+
+    for etrue in range(num_energy_bins):
+        check = np.sum(M[etrue, :])
+        if check > 0:
+            assert (
+                (1.0 - margin) < check < (1.0 + margin)
+            ), "Expected sum(P(reco|true)) = 1, but it's {:f}".format(check)
+
+
+def estimate_rate_in_reco_energy(
+    energy_bin_edges_GeV,
+    effective_acceptance_m2_sr,
+    effective_acceptance_m2_sr_au,
+    differential_flux_per_m2_per_sr_per_s_per_GeV,
+    differential_flux_per_m2_per_sr_per_s_per_GeV_au,
+    energy_reco_given_true_ax0true_ax1reco,
+    energy_reco_given_true_ax0true_ax1reco_au,
+):
+    num_energy_bins = len(energy_bin_edges_GeV) - 1
+    dE_GeV = binning_utils.widths(bin_edges=energy_bin_edges_GeV)
+    dE_GeV_au = np.zeros(num_energy_bins)  # abs. uncertainty is zero
+
+    rate_in_reco_energy_per_s = np.zeros(num_energy_bins)
+    rate_in_reco_energy_per_s_au = np.zeros(num_energy_bins)
+
+    for ereco in range(num_energy_bins):
+        _summands = np.zeros(num_energy_bins)
+        _summands_au = np.zeros(num_energy_bins)
+        for etrue in range(num_energy_bins):
+            _multiplicands = [
+                differential_flux_per_m2_per_sr_per_s_per_GeV[etrue],
+                energy_reco_given_true_ax0true_ax1reco[etrue, ereco],
+                effective_acceptance_m2_sr[etrue],
+                dE_GeV[etrue],
+            ]
+            _multiplicands_au = [
+                differential_flux_per_m2_per_sr_per_s_per_GeV_au[etrue],
+                energy_reco_given_true_ax0true_ax1reco_au[etrue, ereco],
+                effective_acceptance_m2_sr_au[etrue],
+                dE_GeV_au[etrue],
+            ]
+            (
+                _summands[etrue],
+                _summands_au[etrue],
+            ) = propagate_uncertainties.prod(
+                x=_multiplicands, x_au=_multiplicands_au
+            )
+        (
+            rate_in_reco_energy_per_s[ereco],
+            rate_in_reco_energy_per_s_au[ereco],
+        ) = propagate_uncertainties.sum(x=_summands, x_au=_summands_au)
+
+    return rate_in_reco_energy_per_s, rate_in_reco_energy_per_s_au
+
+
+def estimate_rate_in_true_energy(
+    energy_bin_edges_GeV,
+    effective_acceptance_m2_sr,
+    effective_acceptance_m2_sr_au,
+    differential_flux_per_m2_per_sr_per_s_per_GeV,
+    differential_flux_per_m2_per_sr_per_s_per_GeV_au,
+):
+    num_energy_bins = len(energy_bin_edges_GeV) - 1
+    dE_GeV = binning_utils.widths(bin_edges=energy_bin_edges_GeV)
+    dE_GeV_au = np.zeros(num_energy_bins)  # abs. uncertainty is zero
+
+    rate_in_true_energy_per_s = np.zeros(num_energy_bins)
+    rate_in_true_energy_per_s_au = np.zeros(num_energy_bins)
+
+    for etrue in range(num_energy_bins):
+        (
+            rate_in_true_energy_per_s[etrue],
+            rate_in_true_energy_per_s_au[etrue],
+        ) = propagate_uncertainties.prod(
+            x=[
+                differential_flux_per_m2_per_sr_per_s_per_GeV[etrue],
+                effective_acceptance_m2_sr[etrue],
+                dE_GeV[etrue],
+            ],
+            x_au=[
+                differential_flux_per_m2_per_sr_per_s_per_GeV_au[etrue],
+                effective_acceptance_m2_sr_au[etrue],
+                dE_GeV_au[etrue],
+            ],
+        )
+
+    return rate_in_true_energy_per_s, rate_in_true_energy_per_s_au
+
+
+def assert_integral_rates_are_similar_in_reco_and_true_energy(
+    rate_in_reco_energy_per_s, rate_in_true_energy_per_s, margin=0.3,
+):
+    """
+    Integral rate over all energy-bins must not change (much) under
+    energy migration.
+    """
+    integral_Rtrue = np.sum(rate_in_true_energy_per_s[:])
+    integral_Rreco = np.sum(rate_in_reco_energy_per_s[:])
+    assert (1.0 - margin) < integral_Rtrue / integral_Rreco < (1.0 + margin), (
+        "Expected integral rates in both true and reco. energy to be "
+        "roughly the same. But they are not."
+    )

@@ -6,29 +6,55 @@ import pandas
 
 
 RESOURCE_DIR = pkg_resources.resource_filename(
-    "flux_sensitivity",
-    os.path.join(
-        'tests',
-        'resources',
-    )
+    "flux_sensitivity", os.path.join("tests", "resources",)
 )
 
 
-def read_resources(resource_dir):
-    resources = {}
-    for p in glob.glob(os.path.join(resource_dir, "*.csv")):
-        fname = os.path.basename(p)
-        fname = os.path.splitext(fname)[0]
+def read_csv(fname):
+    arr = pandas.read_csv(os.path.join(RESOURCE_DIR, fname)).to_numpy()
+    if len(arr.shape) == 2:
+        if arr.shape[1] == 1:
+            arr = arr.reshape((arr.shape[0],))
+    return arr
 
-        a = pandas.read_csv(p).to_numpy()
-        if len(a.shape) == 2:
-            if a.shape[1] == 1:
-                a = a.reshape((a.shape[0],))
-        resources[fname] = a
-    return resources
+
+energy_bin_edges_GeV = read_csv("energy_bin_edges_GeV.csv")
+
+A_gamma_m2 = read_csv("effective_area_gamma_m2.csv")
+A_gamma_m2_au = read_csv("effective_area_gamma_m2_absolute_uncertainty.csv")
+
+Q_m2_sr = {}
+Q_m2_sr_au = {}
+for pk in ["proton", "electron", "helium"]:
+    Q_m2_sr[pk] = read_csv("effective_acceptance_{:s}_m2_sr.csv".format(pk))
+    Q_m2_sr_au[pk] = read_csv(
+        "effective_acceptance_{:s}_m2_sr_absolute_uncertainty.csv".format(pk)
+    )
+
+M = {}
+M_au = {}
+for pk in ["gamma", "proton", "electron", "helium"]:
+    M[pk] = read_csv(
+        "energy_conditional_probability_reco_given_true_ax0true_ax1reco_{:s}.csv".format(
+            pk
+        )
+    )
+    M_au[pk] = read_csv(
+        "energy_conditional_probability_reco_given_true_ax0true_ax1reco_{:s}_au.csv".format(
+            pk
+        )
+    )
+
+dFdE_per_m2_per_sr_per_GeV_per_s = {}
+for pk in ["proton", "electron", "helium"]:
+    dFdE_per_m2_per_sr_per_GeV_per_s[pk] = read_csv(
+        "differential_flux_{:s}_per_m2_per_sr_per_GeV_per_s.csv".format(pk)
+    )
 
 
 def test_resources():
-    RES = read_resources(resource_dir=RESOURCE_DIR)
+    print(dFdE_per_m2_per_sr_per_GeV_per_s)
 
-    print(RES)
+    for dk in flux_sensitivity.differential_sensitivity.SCENARIOS:
+
+
