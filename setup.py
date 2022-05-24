@@ -11,7 +11,7 @@ setuptools.setup(
     long_description_content_type="text/x-rst",
     url="https://github.com/cherenkov-plenoscope/flux_sensitivity",
     project_urls={
-        "Bug Tracker": "https://github.com/cherenkov-plenoscope/propagate_uncertainties/issues",
+        "Bug Tracker": "https://github.com/cherenkov-plenoscope/flux_sensitivity/issues",
     },
     author="Sebastian Achim Mueller",
     author_email="sebastian-achim.mueller@mpi-hd.mpg.de",
