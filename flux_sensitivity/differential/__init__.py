@@ -7,7 +7,7 @@ from . import scenarios
 
 
 def estimate_differential_sensitivity(
-    energy_bin_edges_GeV, signal_effective_area_m2, critical_signal_rate_per_s,
+    energy_bin_edges_GeV, signal_area_m2, critical_signal_rate_per_s,
 ):
     """
     Estimates the differential flux-sensitivity in N energy-bin.
@@ -16,7 +16,7 @@ def estimate_differential_sensitivity(
     ----------
     energy_bin_edges_GeV : array of (N+1) floats / GeV
         Edges of the energy-bins.
-    signal_effective_area_m2 : array of N floats / m^{2}
+    signal_area_m2 : array of N floats / m^{2}
         Signal's effective area for each energy-bin.
     critical_signal_rate_per_s : array of N floats / s^{-1}
         Signal's minimal rate to claim a detection for each energy-bin.
@@ -35,7 +35,7 @@ def estimate_differential_sensitivity(
         np.gradient(energy_bin_edges_GeV) > 0.0
     ), "Energy bin-edges must be increasing."
 
-    assert num_energy_bins == len(signal_effective_area_m2)
+    assert num_energy_bins == len(signal_area_m2)
     assert num_energy_bins == len(critical_signal_rate_per_s)
 
     # work
@@ -45,10 +45,10 @@ def estimate_differential_sensitivity(
     for ebin in range(num_energy_bins):
         dE_GeV = energy_bin_edges_GeV[ebin + 1] - energy_bin_edges_GeV[ebin]
         assert dE_GeV > 0.0
-        if signal_effective_area_m2[ebin] > 0:
+        if signal_area_m2[ebin] > 0:
             dV_per_s_per_m2 = (
                 critical_signal_rate_per_s[ebin]
-                / signal_effective_area_m2[ebin]
+                / signal_area_m2[ebin]
             )
         else:
             dV_per_s_per_m2 = np.nan
@@ -151,8 +151,8 @@ def estimate_critical_signal_rate_vs_energy(
 
 
 def apply_scenario_to_signal_effective_area(
-    signal_effective_area_m2,
-    signal_effective_area_m2_au,
+    signal_area_m2,
+    signal_area_m2_au,
     scenario_G_matrix,
     scenario_G_matrix_au,
 ):
@@ -161,10 +161,10 @@ def apply_scenario_to_signal_effective_area(
 
     Parameters
     ----------
-    signal_effective_area_m2 : array of N floats / m^{2}
+    signal_area_m2 : array of N floats / m^{2}
         Signal's effective area for each energy-bin in true energy.
-    signal_effective_area_m2_au : array of N floats / m^{2}
-        Absolute uncertainty of signal_effective_area_m2.
+    signal_area_m2_au : array of N floats / m^{2}
+        Absolute uncertainty of signal_area_m2.
     scenario_G_matrix : array (N x N) / 1
         The scenario's matrix 'G' to confuse the signal's effective area.
     scenario_G_matrix_au : array (N x N) / 1
@@ -172,10 +172,10 @@ def apply_scenario_to_signal_effective_area(
 
     Returns
     -------
-    scenario_signal_effective_area_m2, scenario_signal_effective_area_m2_au
+    scenario_signal_area_m2, scenario_signal_area_m2_au
     """
-    Atrue = signal_effective_area_m2
-    Atrue_au = signal_effective_area_m2_au
+    Atrue = signal_area_m2
+    Atrue_au = signal_area_m2_au
     G = scenario_G_matrix
     G_au = scenario_G_matrix_au
 
