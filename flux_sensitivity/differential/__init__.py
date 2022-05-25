@@ -126,7 +126,7 @@ def make_energy_confusion_matrices_for_signal_and_background(
 
 
 def estimate_critical_signal_rate_vs_energy(
-    background_rate_onregion_per_s,
+    background_rate_onregion_in_scenario_per_s,
     onregion_over_offregion_ratio,
     observation_time_s,
     instrument_systematic_uncertainty_relative,
@@ -134,15 +134,15 @@ def estimate_critical_signal_rate_vs_energy(
     estimator_statistics,
 ):
     critical_signal_rate_per_s = np.nan * np.ones(
-        shape=background_rate_onregion_per_s.shape
+        shape=background_rate_onregion_in_scenario_per_s.shape
     )
 
-    for ebin in range(len(background_rate_onregion_per_s)):
-        if background_rate_onregion_per_s[ebin] > 0.0:
+    for ebin in range(len(background_rate_onregion_in_scenario_per_s)):
+        if background_rate_onregion_in_scenario_per_s[ebin] > 0.0:
             critical_signal_rate_per_s[
                 ebin
             ] = critical_rate.estimate_critical_signal_rate(
-                background_rate_onregion_per_s=background_rate_onregion_per_s[
+                background_rate_onregion_in_scenario_per_s=background_rate_onregion_in_scenario_per_s[
                     ebin
                 ],
                 onregion_over_offregion_ratio=onregion_over_offregion_ratio,

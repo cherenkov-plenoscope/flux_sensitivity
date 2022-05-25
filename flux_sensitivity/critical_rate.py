@@ -27,7 +27,7 @@ import lima1983analysis
 
 
 def estimate_critical_signal_rate(
-    background_rate_onregion_per_s,
+    background_rate_onregion_in_scenario_per_s,
     onregion_over_offregion_ratio,
     observation_time_s,
     instrument_systematic_uncertainty_relative,
@@ -42,8 +42,9 @@ def estimate_critical_signal_rate(
 
     Parameters
     ----------
-    background_rate_onregion_per_s : float / s^{-1}
-        Expected rate of background counts in the on-region.
+    background_rate_onregion_in_scenario_per_s : float / s^{-1}
+        Expected rate of background counts in the on-region for a certain
+        scenario.
         This is $\\hat{R}_B = \\hat{N}_B / T_\\text{obs}$.
     onregion_over_offregion_ratio : float / 1
         Ratio of on- over off-region.
@@ -64,7 +65,7 @@ def estimate_critical_signal_rate(
         The signal's minimal rate in the on-region required to claim a
         detection.
     """
-    hatR_B = float(background_rate_onregion_per_s)
+    hatR_B = float(background_rate_onregion_in_scenario_per_s)
     alpha = float(onregion_over_offregion_ratio)
     T_obs = float(observation_time_s)
     S = float(detection_threshold_std)
