@@ -287,8 +287,8 @@ def assert_energy_reco_given_true_ax0true_ax1reco_is_normalized(
 
 def estimate_rate_in_reco_energy(
     energy_bin_edges_GeV,
-    effective_acceptance_m2_sr,
-    effective_acceptance_m2_sr_au,
+    acceptance_m2_sr,
+    acceptance_m2_sr_au,
     differential_flux_per_m2_per_sr_per_s_per_GeV,
     differential_flux_per_m2_per_sr_per_s_per_GeV_au,
     energy_reco_given_true_ax0true_ax1reco,
@@ -308,13 +308,13 @@ def estimate_rate_in_reco_energy(
             _multiplicands = [
                 differential_flux_per_m2_per_sr_per_s_per_GeV[etrue],
                 energy_reco_given_true_ax0true_ax1reco[etrue, ereco],
-                effective_acceptance_m2_sr[etrue],
+                acceptance_m2_sr[etrue],
                 dE_GeV[etrue],
             ]
             _multiplicands_au = [
                 differential_flux_per_m2_per_sr_per_s_per_GeV_au[etrue],
                 energy_reco_given_true_ax0true_ax1reco_au[etrue, ereco],
-                effective_acceptance_m2_sr_au[etrue],
+                acceptance_m2_sr_au[etrue],
                 dE_GeV_au[etrue],
             ]
             (
@@ -333,8 +333,8 @@ def estimate_rate_in_reco_energy(
 
 def estimate_rate_in_true_energy(
     energy_bin_edges_GeV,
-    effective_acceptance_m2_sr,
-    effective_acceptance_m2_sr_au,
+    acceptance_m2_sr,
+    acceptance_m2_sr_au,
     differential_flux_per_m2_per_sr_per_s_per_GeV,
     differential_flux_per_m2_per_sr_per_s_per_GeV_au,
 ):
@@ -352,12 +352,12 @@ def estimate_rate_in_true_energy(
         ) = propagate_uncertainties.prod(
             x=[
                 differential_flux_per_m2_per_sr_per_s_per_GeV[etrue],
-                effective_acceptance_m2_sr[etrue],
+                acceptance_m2_sr[etrue],
                 dE_GeV[etrue],
             ],
             x_au=[
                 differential_flux_per_m2_per_sr_per_s_per_GeV_au[etrue],
-                effective_acceptance_m2_sr_au[etrue],
+                acceptance_m2_sr_au[etrue],
                 dE_GeV_au[etrue],
             ],
         )
