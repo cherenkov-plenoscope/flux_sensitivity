@@ -150,23 +150,29 @@ def estimate_critical_signal_rate_vs_energy(
     return critical_signal_rate_per_s
 
 
-def make_area_in_reco_energy(
+def apply_scenario_to_signal_effective_area(
     signal_effective_area_m2,
     signal_effective_area_m2_au,
     scenario_G_matrix,
     scenario_G_matrix_au,
 ):
     """
+    Apply scenario (matrix G) to the signal's effective area.
+
     Parameters
     ----------
     signal_effective_area_m2 : array of N floats / m^{2}
-        Signal's effective area for each energy-bin, in true energy.
+        Signal's effective area for each energy-bin in true energy.
     signal_effective_area_m2_au : array of N floats / m^{2}
         Absolute uncertainty of signal_effective_area_m2.
     scenario_G_matrix : array (N x N) / 1
         The scenario's matrix 'G' to confuse the signal's effective area.
     scenario_G_matrix_au : array (N x N) / 1
         Absolute uncertainty of scenario_G_matrix.
+
+    Returns
+    -------
+    scenario_signal_effective_area_m2, scenario_signal_effective_area_m2_au
     """
     Atrue = signal_effective_area_m2
     Atrue_au = signal_effective_area_m2_au
@@ -203,9 +209,38 @@ def make_area_in_reco_energy(
     return Ascen, Ascen_au
 
 
-def integrate_rates_in_reco_energy_with_mask(
-    Rreco, Rreco_au, integration_mask, integration_mask_au
+def apply_scenario_to_background_rate(
+    rate_in_reco_energy_per_s,
+    rate_in_reco_energy_per_s_au,
+    scenario_B_matrix,
+    scenario_B_matrix_au,
 ):
+    """
+    Apply scenario (matrix B) to the background's rate in reco. energy.
+
+    Parameters
+    ----------
+    rate_in_reco_energy_per_s : array of N floats / m^{2}
+        Background's rate for each energy-bin in reco energy.
+    rate_in_reco_energy_per_s_au : array of N floats / m^{2}
+        Absolute uncertainty of rate_in_reco_energy_per_s.
+    scenario_B_matrix : array (N x N) / 1
+        The scenario's matrix 'B' to mask the energy-bins where
+        background is collected in.
+    scenario_B_matrix_au : array (N x N) / 1
+        Absolute uncertainty of scenario_G_matrix.
+
+    Returns
+    -------
+    rate_scenario_per_s, rate_scenario_per_s_au
+        The scenario's rate of background in reco. energy.
+    """
+    Rreco = rate_in_reco_energy_per_s
+    Rreco_au = rate_in_reco_energy_per_s_au
+
+    integration_mask = scenario_B_matrix
+    integration_mask_au = scenario_B_matrix_au
+
     assert len(Rreco) == len(Rreco_au)
     assert np.all(Rreco >= 0)
     assert np.all(Rreco_au >= 0)
