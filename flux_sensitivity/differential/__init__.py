@@ -178,35 +178,35 @@ def apply_scenario_to_signal_effective_area(
     Atrue_au = signal_effective_area_m2_au
     G = scenario_G_matrix
     G_au = scenario_G_matrix_au
+
     assert len(Atrue) == len(Atrue_au)
     assert np.all(Atrue >= 0)
     assert np.all(Atrue_au >= 0)
+    N = len(Atrue)
 
     assert G.shape == G_au.shape
     assert G.shape[0] == G.shape[1]
     assert np.all(G >= 0)
     assert np.all(G_au >= 0)
+    assert G.shape[0] == N
 
-    assert len(Atrue) == G.shape[0]
+    Ascenario = np.zeros(N)
+    Ascenario_au = np.zeros(N)
 
-    num_bins = len(Atrue)
-    Ascen = np.zeros(num_bins)
-    Ascen_au = np.zeros(num_bins)
+    for ereco in range(N):
+        tmp = np.zeros(N)
+        tmp_au = np.zeros(N)
 
-    for ereco in range(num_bins):
-        tmp = np.zeros(num_bins)
-        tmp_au = np.zeros(num_bins)
-
-        for etrue in range(num_bins):
+        for etrue in range(N):
             tmp[etrue], tmp_au[etrue] = propagate_uncertainties.prod(
                 x=[G[etrue, ereco], Atrue[etrue],],
                 x_au=[G_au[etrue, ereco], Atrue_au[etrue],],
             )
 
-        Ascen[ereco], Ascen_au[ereco] = propagate_uncertainties.sum(
+        Ascenario[ereco], Ascenario_au[ereco] = propagate_uncertainties.sum(
             x=tmp, x_au=tmp_au
         )
-    return Ascen, Ascen_au
+    return Ascenario, Ascenario_au
 
 
 def apply_scenario_to_background_rate(
@@ -237,41 +237,37 @@ def apply_scenario_to_background_rate(
     """
     Rreco = rate_in_reco_energy_per_s
     Rreco_au = rate_in_reco_energy_per_s_au
-
-    integration_mask = scenario_B_matrix
-    integration_mask_au = scenario_B_matrix_au
+    B = scenario_B_matrix
+    B_au = scenario_B_matrix_au
 
     assert len(Rreco) == len(Rreco_au)
     assert np.all(Rreco >= 0)
     assert np.all(Rreco_au >= 0)
-    num_energy_bins = len(Rreco)
+    N = len(Rreco)
 
-    assert integration_mask.shape == integration_mask_au.shape
-    assert np.all(integration_mask >= 0)
-    assert np.all(integration_mask_au >= 0)
+    assert B.shape == B_au.shape
+    assert B.shape[0] == B.shape[1]
+    assert np.all(B >= 0)
+    assert np.all(B_au >= 0)
+    assert B.shape[0] == N
 
-    assert integration_mask.shape[0] == integration_mask.shape[1]
-    assert integration_mask.shape[0] == num_energy_bins
+    Rscenario = np.zeros(N)
+    Rscenario_au = np.zeros(N)
 
-    imask = integration_mask
-    imask_au = integration_mask_au
+    for ereco in range(N):
+        tmp = np.zeros(N)
+        tmp_au = np.zeros(N)
 
-    Rreco_total = np.zeros(num_energy_bins)
-    Rreco_total_au = np.zeros(num_energy_bins)
-
-    for ereco in range(num_energy_bins):
-        tmp_sum = np.zeros(num_energy_bins)
-        tmp_sum_au = np.zeros(num_energy_bins)
-        for etrue in range(num_energy_bins):
-            tmp_sum[etrue], tmp_sum_au[etrue] = propagate_uncertainties.prod(
-                x=[imask[ereco, etrue], Rreco[etrue],],
-                x_au=[imask_au[ereco, etrue], Rreco_au[etrue],],
+        for etrue in range(N):
+            tmp[etrue], tmp_au[etrue] = propagate_uncertainties.prod(
+                x=[B[ereco, etrue], Rreco[etrue],],
+                x_au=[B_au[ereco, etrue], Rreco_au[etrue],],
             )
-        (
-            Rreco_total[ereco],
-            Rreco_total_au[ereco],
-        ) = propagate_uncertainties.sum(x=tmp_sum, x_au=tmp_sum_au)
-    return Rreco_total, Rreco_total_au
+
+        Rscenario[ereco], Rscenario_au[ereco] = propagate_uncertainties.sum(
+            x=tmp, x_au=tmp_au
+        )
+    return Rscenario, Rscenario_au
 
 
 def assert_energy_reco_given_true_ax0true_ax1reco_is_normalized(
