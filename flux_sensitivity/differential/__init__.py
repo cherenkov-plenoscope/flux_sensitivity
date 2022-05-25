@@ -7,7 +7,9 @@ from . import scenarios
 
 
 def estimate_differential_sensitivity(
-    energy_bin_edges_GeV, signal_area_in_scenario_m2, critical_signal_rate_in_scenario_per_s,
+    energy_bin_edges_GeV,
+    signal_area_in_scenario_m2,
+    critical_signal_rate_in_scenario_per_s,
 ):
     """
     Estimates the differential flux-sensitivity in N energy-bin for a
@@ -155,10 +157,7 @@ def estimate_critical_signal_rate_vs_energy(
 
 
 def apply_scenario_to_signal_effective_area(
-    signal_area_m2,
-    signal_area_m2_au,
-    scenario_G_matrix,
-    scenario_G_matrix_au,
+    signal_area_m2, signal_area_m2_au, scenario_G_matrix, scenario_G_matrix_au,
 ):
     """
     Apply scenario (matrix G) to the signal's effective area.
