@@ -22,8 +22,7 @@ setuptools.setup(
     },
     install_requires=[
         "binning_utils_sebastian-achim-mueller",
-        "confusion_matrix_sebastian-achim-mueller>=0.0.2",
-        "propagate_uncertainties_sebastian-achim-mueller",
+        "propagate_uncertainties_sebastian-achim-mueller>0.2.2",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -1,6 +1,6 @@
 import numpy as np
 import os
-import propagate_uncertainties
+import propagate_uncertainties as pru
 import binning_utils
 from .. import critical_rate
 from . import scenarios
@@ -9,7 +9,9 @@ from . import scenarios
 def estimate_differential_sensitivity(
     energy_bin_edges_GeV,
     signal_area_in_scenario_m2,
+    signal_area_in_scenario_m2_au,
     critical_signal_rate_in_scenario_per_s,
+    critical_signal_rate_in_scenario_per_s_au,
 ):
     """
     Estimates the differential flux-sensitivity in N energy-bin for a
@@ -22,11 +24,14 @@ def estimate_differential_sensitivity(
     signal_area_in_scenario_m2 : array of N floats / m^{2}
         Signal's effective area for each energy-bin w.r.t. to the applied
         scenario.
+    signal_area_in_scenario_m2_au : array of N floats / m^{2}
+        Absolute uncertainty.
     critical_signal_rate_in_scenario_per_s : array of N floats / s^{-1}
         Signal's minimal rate to claim a detection for each energy-bin w.r.t.
         the scenario, the same scenario as applied in
         signal_area_in_scenario_m2.
-
+    critical_signal_rate_in_scenario_per_s_au : array of N floats / s^{-1}
+        Absolute uncertainty.
     Returns
     -------
     differential_flux_vs_energy : array of N floats / m^{-2} s^{-1} (GeV)^{-1}
@@ -46,21 +51,33 @@ def estimate_differential_sensitivity(
 
     # work
     # ----
+    dE_GeV = binning_utils.widths(bin_edges=energy_bin_edges_GeV)
     dVdE_per_s_per_m2_per_GeV = np.nan * np.ones(num_energy_bins)
+    dVdE_per_s_per_m2_per_GeV_au = np.nan * np.ones(num_energy_bins)
 
     for ebin in range(num_energy_bins):
-        dE_GeV = energy_bin_edges_GeV[ebin + 1] - energy_bin_edges_GeV[ebin]
-        assert dE_GeV > 0.0
         if signal_area_in_scenario_m2[ebin] > 0:
-            dV_per_s_per_m2 = (
-                critical_signal_rate_in_scenario_per_s[ebin]
-                / signal_area_in_scenario_m2[ebin]
+            dV_per_s_per_m2, dV_per_s_per_m2_au = pru.divide(
+                x=critical_signal_rate_in_scenario_per_s[ebin],
+                x_au=critical_signal_rate_in_scenario_per_s_au[ebin],
+                y=signal_area_in_scenario_m2[ebin],
+                y_au=signal_area_in_scenario_m2_au[ebin],
             )
         else:
             dV_per_s_per_m2 = np.nan
+            dV_per_s_per_m2_au = np.nan
 
-        dVdE_per_s_per_m2_per_GeV[ebin] = dV_per_s_per_m2 / dE_GeV
-    return dVdE_per_s_per_m2_per_GeV
+        (
+            dVdE_per_s_per_m2_per_GeV[ebin],
+            dVdE_per_s_per_m2_per_GeV_au[ebin],
+        ) = pru.divide(
+            x=dV_per_s_per_m2,
+            x_au=dV_per_s_per_m2_au,
+            y=dE_GeV[ebin],
+            y_au=0.0,
+        )
+
+    return dVdE_per_s_per_m2_per_GeV, dVdE_per_s_per_m2_per_GeV_au
 
 
 SCENARIOS = {
@@ -127,6 +144,7 @@ def make_energy_confusion_matrices_for_signal_and_background(
 
 def estimate_critical_signal_rate_vs_energy(
     background_rate_onregion_in_scenario_per_s,
+    background_rate_onregion_in_scenario_per_s_au,
     onregion_over_offregion_ratio,
     observation_time_s,
     instrument_systematic_uncertainty_relative,
@@ -136,13 +154,20 @@ def estimate_critical_signal_rate_vs_energy(
     critical_signal_rate_per_s = np.nan * np.ones(
         shape=background_rate_onregion_in_scenario_per_s.shape
     )
+    critical_signal_rate_per_s_au = np.nan * np.ones(
+        shape=background_rate_onregion_in_scenario_per_s.shape
+    )
 
     for ebin in range(len(background_rate_onregion_in_scenario_per_s)):
         if background_rate_onregion_in_scenario_per_s[ebin] > 0.0:
-            critical_signal_rate_per_s[
-                ebin
-            ] = critical_rate.estimate_critical_signal_rate(
+            (
+                critical_signal_rate_per_s[ebin],
+                critical_signal_rate_per_s_au[ebin],
+            ) = critical_rate.estimate_critical_signal_rate(
                 background_rate_onregion_in_scenario_per_s=background_rate_onregion_in_scenario_per_s[
+                    ebin
+                ],
+                background_rate_onregion_in_scenario_per_s_au=background_rate_onregion_in_scenario_per_s_au[
                     ebin
                 ],
                 onregion_over_offregion_ratio=onregion_over_offregion_ratio,
@@ -153,7 +178,8 @@ def estimate_critical_signal_rate_vs_energy(
             )
         else:
             critical_signal_rate_per_s[ebin] = float("nan")
-    return critical_signal_rate_per_s
+            critical_signal_rate_per_s_au[ebin] = float("nan")
+    return critical_signal_rate_per_s, critical_signal_rate_per_s_au
 
 
 def apply_scenario_to_signal_effective_area(
@@ -201,14 +227,12 @@ def apply_scenario_to_signal_effective_area(
         tmp_au = np.zeros(N)
 
         for etrue in range(N):
-            tmp[etrue], tmp_au[etrue] = propagate_uncertainties.prod(
+            tmp[etrue], tmp_au[etrue] = pru.prod(
                 x=[G[etrue, ereco], Atrue[etrue],],
                 x_au=[G_au[etrue, ereco], Atrue_au[etrue],],
             )
 
-        Ascenario[ereco], Ascenario_au[ereco] = propagate_uncertainties.sum(
-            x=tmp, x_au=tmp_au
-        )
+        Ascenario[ereco], Ascenario_au[ereco] = pru.sum(x=tmp, x_au=tmp_au)
     return Ascenario, Ascenario_au
 
 
@@ -262,14 +286,12 @@ def apply_scenario_to_background_rate(
         tmp_au = np.zeros(N)
 
         for etrue in range(N):
-            tmp[etrue], tmp_au[etrue] = propagate_uncertainties.prod(
+            tmp[etrue], tmp_au[etrue] = pru.prod(
                 x=[B[ereco, etrue], Rreco[etrue],],
                 x_au=[B_au[ereco, etrue], Rreco_au[etrue],],
             )
 
-        Rscenario[ereco], Rscenario_au[ereco] = propagate_uncertainties.sum(
-            x=tmp, x_au=tmp_au
-        )
+        Rscenario[ereco], Rscenario_au[ereco] = pru.sum(x=tmp, x_au=tmp_au)
     return Rscenario, Rscenario_au
 
 
@@ -320,16 +342,13 @@ def estimate_rate_in_reco_energy(
                 acceptance_m2_sr_au[etrue],
                 dE_GeV_au[etrue],
             ]
-            (
-                _summands[etrue],
-                _summands_au[etrue],
-            ) = propagate_uncertainties.prod(
+            (_summands[etrue], _summands_au[etrue],) = pru.prod(
                 x=_multiplicands, x_au=_multiplicands_au
             )
         (
             rate_in_reco_energy_per_s[ereco],
             rate_in_reco_energy_per_s_au[ereco],
-        ) = propagate_uncertainties.sum(x=_summands, x_au=_summands_au)
+        ) = pru.sum(x=_summands, x_au=_summands_au)
 
     return rate_in_reco_energy_per_s, rate_in_reco_energy_per_s_au
 
@@ -352,7 +371,7 @@ def estimate_rate_in_true_energy(
         (
             rate_in_true_energy_per_s[etrue],
             rate_in_true_energy_per_s_au[etrue],
-        ) = propagate_uncertainties.prod(
+        ) = pru.prod(
             x=[
                 differential_flux_per_m2_per_sr_per_s_per_GeV[etrue],
                 acceptance_m2_sr[etrue],
