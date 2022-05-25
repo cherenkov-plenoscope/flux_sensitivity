@@ -22,9 +22,7 @@ def next_containment_and_weight(
         return target_containment, weight
 
 
-def init_B(
-    probability_reco_given_true, containment=0.68
-):
+def init_B(probability_reco_given_true, containment=0.68):
     # ax0 -> true
     # ax1 -> reco
     num_bins = probability_reco_given_true.shape[0]

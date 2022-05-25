@@ -15,11 +15,11 @@ def estimate_differential_sensitivity(
     Parameters
     ----------
     energy_bin_edges_GeV : array of (N+1) floats / GeV
-        The edges of the energy-bins.
+        Edges of the energy-bins.
     signal_effective_area_m2 : array of N floats / m^{2}
-        The signal's effective area for each energy-bin.
+        Signal's effective area for each energy-bin.
     critical_signal_rate_per_s : array of N floats / s^{-1}
-        The signal's minimal rate to claim a detection for each energy-bin.
+        Signal's minimal rate to claim a detection for each energy-bin.
 
     Returns
     -------
@@ -151,40 +151,56 @@ def estimate_critical_signal_rate_vs_energy(
 
 
 def make_area_in_reco_energy(
-    area, area_au, G_matrix, G_matrix_au,
+    signal_effective_area_m2,
+    signal_effective_area_m2_au,
+    scenario_G_matrix,
+    scenario_G_matrix_au,
 ):
-    A = area
-    A_au = area_au
-    G = G_matrix
-    G_au = G_matrix_au
-    assert len(A) == len(A_au)
-    assert np.all(A >= 0)
-    assert np.all(A_au >= 0)
+    """
+    Parameters
+    ----------
+    signal_effective_area_m2 : array of N floats / m^{2}
+        Signal's effective area for each energy-bin, in true energy.
+    signal_effective_area_m2_au : array of N floats / m^{2}
+        Absolute uncertainty of signal_effective_area_m2.
+    scenario_G_matrix : array (N x N) / 1
+        The scenario's matrix 'G' to confuse the signal's effective area.
+    scenario_G_matrix_au : array (N x N) / 1
+        Absolute uncertainty of scenario_G_matrix.
+    """
+    Atrue = signal_effective_area_m2
+    Atrue_au = signal_effective_area_m2_au
+    G = scenario_G_matrix
+    G_au = scenario_G_matrix_au
+    assert len(Atrue) == len(Atrue_au)
+    assert np.all(Atrue >= 0)
+    assert np.all(Atrue_au >= 0)
 
     assert G.shape == G_au.shape
     assert G.shape[0] == G.shape[1]
     assert np.all(G >= 0)
     assert np.all(G_au >= 0)
 
-    assert len(A) == G.shape[0]
+    assert len(Atrue) == G.shape[0]
 
-    num_bins = len(A)
-    A_out = np.zeros(num_bins)
-    A_out_au = np.zeros(num_bins)
+    num_bins = len(Atrue)
+    Ascen = np.zeros(num_bins)
+    Ascen_au = np.zeros(num_bins)
 
-    for er in range(num_bins):
+    for ereco in range(num_bins):
         tmp = np.zeros(num_bins)
         tmp_au = np.zeros(num_bins)
 
-        for et in range(num_bins):
-            tmp[et], tmp_au[et] = propagate_uncertainties.prod(
-                x=[G[et, er], A[et],], x_au=[G_au[et, er], A_au[et],],
+        for etrue in range(num_bins):
+            tmp[etrue], tmp_au[etrue] = propagate_uncertainties.prod(
+                x=[G[etrue, ereco], Atrue[etrue],],
+                x_au=[G_au[etrue, ereco], Atrue_au[etrue],],
             )
 
-        A_out[er], A_out_au[er] = propagate_uncertainties.sum(
+        Ascen[ereco], Ascen_au[ereco] = propagate_uncertainties.sum(
             x=tmp, x_au=tmp_au
         )
-    return A_out, A_out_au
+    return Ascen, Ascen_au
 
 
 def integrate_rates_in_reco_energy_with_mask(
