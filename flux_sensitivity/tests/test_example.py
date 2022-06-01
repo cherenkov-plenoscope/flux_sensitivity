@@ -3,6 +3,8 @@ import pkg_resources
 import glob
 import os
 import pandas
+import astropy
+from astropy.io import fits
 
 
 RESOURCE_DIR = pkg_resources.resource_filename(
@@ -57,3 +59,16 @@ def test_resources():
 
     for dk in flux_sensitivity.differential.SCENARIOS:
         pass
+
+    print("READ CTA")
+
+    f = astropy.io.fits.open(
+        os.path.join(
+            RESOURCE_DIR,
+            "cta",
+            "Prod5-South-20deg-AverageAz-14MSTs37SSTs.1800s-v0.1.fits.gz",
+        )
+    )
+    f.readall()
+    f.info()
+    f.close()
