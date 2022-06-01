@@ -143,6 +143,7 @@ def _read_effective_area(hdu):
 
 
 def _read_background(hdu):
+    per_MeV_to_per_GeV = 1e3
     return {
         "energy_bin_edges_GeV": merge_bin_edges_low_high(
             low=hdu.data["ENERG_LO"][0, :] * 1e3,
@@ -154,7 +155,8 @@ def _read_background(hdu):
         "dety_bin_edges_deg": merge_bin_edges_low_high(
             low=hdu.data["DETY_LO"][0, :], high=hdu.data["DETY_HI"][0, :],
         ),
-        "background_vs_detx_vs_dety_per_s_per_sr_per_MeV": hdu.data["BKG"][0],
+        "background_vs_detx_vs_dety_per_s_per_sr_per_GeV": per_MeV_to_per_GeV
+        * hdu.data["BKG"][0],
     }
 
 
@@ -202,9 +204,9 @@ def average_instrument_response_over_field_of_view(irf, roi_opening_deg):
     )
 
     irf["background"][
-        "background_per_s_per_sr_per_MeV"
+        "background_per_s_per_sr_per_GeV"
     ] = average_field_of_view_grid(
-        X=irf["background"]["background_vs_detx_vs_dety_per_s_per_sr_per_MeV"],
+        X=irf["background"]["background_vs_detx_vs_dety_per_s_per_sr_per_GeV"],
         detx_bin_edges_deg=irf["background"]["detx_bin_edges_deg"],
         dety_bin_edges_deg=irf["background"]["dety_bin_edges_deg"],
         roi_opening_deg=roi_opening_deg,
@@ -299,58 +301,20 @@ def integrate_dPdMu_to_get_probability_reco_given_true(
     return probability_reco_given_true
 
 
-def my_instrument_response_function(path, roi_opening_deg):
-    irf = read_instrument_response_function(path=path)
-    irf = average_instrument_response_over_field_of_view(
-        irf=irf, roi_opening_deg=roi_opening_deg
-    )
+def integrate_background_rate_in_onregion(
+    background_per_s_per_sr_per_GeV,
+    point_spread_function_sigma_deg,
+    energy_bin_edges_GeV,
+):
+    psf_sigma_rad = np.deg2rad(point_spread_function_sigma_deg)
+    energy_bin_width_GeV = binning_utils.widths(energy_bin_edges_GeV)
 
-    energy_bin_edges_GeV = find_common_energy_bin_edges(components=irf)
-
-    signal_area_m2 = np.interp(
-        x=binning_utils.centers(edges=energy_bin_edges_GeV),
-        xp=binning_utils.centers(edges=A["energy_bin_edges_GeV"]),
-        fp=A["area_m2"],
-    )
-
-    bg_per_s_per_sr_per_GeV = np.interp(
-        x=binning_utils.centers(edges=energy_bin_edges_GeV),
-        xp=binning_utils.centers(edges=B["energy_bin_edges_GeV"]),
-        fp=B["bg_per_s_per_sr_per_MeV"] * 1e3,
-    )
-
-    psf_sigma_deg = np.interp(
-        x=binning_utils.centers(edges=energy_bin_edges_GeV),
-        xp=binning_utils.centers(edges=P["energy_bin_edges_GeV"]),
-        fp=P["sigma_deg"],
-    )
-
-    energy_confusion = log10interp2d(
-        x=binning_utils.centers(edges=energy_bin_edges_GeV),
-        y=binning_utils.centers(edges=energy_bin_edges_GeV),
-        fp=C["confusion"],
-        xp=binning_utils.centers(edges=C["energy_bin_edges_GeV"]),
-        yp=binning_utils.centers(edges=C["energy_bin_edges_GeV"]),
-    )
-
-    # back ground rate
-    bg_rate_per_s_per = np.zeros(len(energy_bin_edges_GeV) - 1)
+    background_rate_per_s = np.zeros(len(energy_bin_edges_GeV) - 1)
     for e in range(len(energy_bin_edges_GeV) - 1):
-        E_start_GeV = energy_bin_edges_GeV[e]
-        E_stop_GeV = energy_bin_edges_GeV[e + 1]
-        dE_GeV = E_stop_GeV - E_start_GeV
-
-        psf_sigma_rad = np.deg2rad(psf_sigma_deg[e])
-        psf_solid_angle_sr = np.pi * psf_sigma_rad ** 2
-        bg_rate_per_s_per[e] = (
-            bg_per_s_per_sr_per_GeV[e] * dE_GeV * psf_solid_angle_sr
+        psf_solid_angle_sr = np.pi * psf_sigma_rad[e] ** 2
+        background_rate_per_s[e] = (
+            background_per_s_per_sr_per_GeV[e]
+            * energy_bin_width_GeV[e]
+            * psf_solid_angle_sr
         )
-
-    irf = {}
-    irf["energy_bin_edges_GeV"] = energy_bin_edges_GeV
-    irf["signal_area_m2"] = signal_area_m2
-    irf["background_per_s_per_sr_per_GeV"] = bg_per_s_per_sr_per_GeV
-    irf["background_rate_per_s"] = bg_rate_per_s_per
-    irf["psf_sigma_deg"] = psf_sigma_deg
-    irf["energy_confusion"] = energy_confusion
-    return irf
+    return background_rate_per_s
