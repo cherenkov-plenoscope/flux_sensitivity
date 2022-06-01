@@ -104,51 +104,12 @@ def find_common_energy_bin_edges(components):
     return energy_bin_edges_GeV
 
 
-def bin_centers(edges):
-    return 0.5 * (edges[0:-1] + edges[1:])
-
-
 def log10interp2d(x, y, fp, xp, yp):
     def ll(x):
         return x
 
-    mm_f = scipy.interpolate.interp2d(
-        x=ll(xp), y=ll(yp), z=fp, kind="linear"
-    )
+    mm_f = scipy.interpolate.interp2d(x=ll(xp), y=ll(yp), z=fp, kind="linear")
     return mm_f(ll(x), ll(y))
-
-
-
-def integrate_energy_dispertsion(dPdMu, energy_bin_edges_GeV, target_bin_edges_GeV):
-    """
-    \\mu = E_{reco} / E_{true}
-
-    Int_0^\\infty \\frac{dP}{dMu} dMu = 1
-    """
-    N = dPdMu.shape[0]
-    assert N == dPdMu.shape[1]
-    assert N == len(energy_bin_edges_GeV) - 1
-
-    Nt = len(target_bin_edges_GeV) - 1
-
-    energy_bin_centers_GeV = bin_centers(bin_edges=energy_bin_edges_GeV)
-
-    R = np.zeros(shape=(Nt, Nt))
-    for itEtrue in range(Nt):
-        for jtEreco in range(Nt):
-
-            tEreco_start = target_bin_edges_GeV[jtEreco]
-            tEreco_stop = target_bin_edges_GeV[jtEreco + 1]
-
-            mask = np.logical_and(
-                energy_bin_centers_GeV >= tEreco_start,
-                energy_bin_centers_GeV < tEreco_stop
-            )
-
-            R_I_Etrue = dPdMu[mask, iEtrue]
-
-    return R
-
 
 
 def _read_energy_dispersion(hdu):
@@ -158,9 +119,8 @@ def _read_energy_dispersion(hdu):
             low=hdu.data["ENERG_LO"][0, :] * 1e3,
             high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
-        "Mu_bin_edges" : merge_bin_edges_low_high(
-            low=hdu.data["MIGRA_LO"][0, :],
-            high=hdu.data["MIGRA_HI"][0, :],
+        "Mu_bin_edges": merge_bin_edges_low_high(
+            low=hdu.data["MIGRA_LO"][0, :], high=hdu.data["MIGRA_HI"][0, :],
         ),
         "theta_bin_edges_deg": merge_bin_edges_low_high(
             low=hdu.data["THETA_LO"][0, :], high=hdu.data["THETA_HI"][0, :],
@@ -215,9 +175,13 @@ def read_instrument_response_function(path):
     irf = {}
     with astropy.io.fits.open(path) as f:
         irf["effective_area"] = _read_effective_area(hdu=f["EFFECTIVE AREA"])
-        irf["energy_dispersion"] =  _read_energy_dispersion(hdu=f["ENERGY DISPERSION"])
+        irf["energy_dispersion"] = _read_energy_dispersion(
+            hdu=f["ENERGY DISPERSION"]
+        )
         irf["background"] = _read_background(hdu=f["BACKGROUND"])
-        irf["point_spread_function"] = _read_point_spread_function(hdu=f["POINT SPREAD FUNCTION"])
+        irf["point_spread_function"] = _read_point_spread_function(
+            hdu=f["POINT SPREAD FUNCTION"]
+        )
 
     return irf
 
@@ -237,7 +201,9 @@ def average_instrument_response_over_field_of_view(irf, roi_opening_deg):
         roi_opening_deg=roi_opening_deg,
     )
 
-    irf["background"]["background_per_s_per_sr_per_MeV"] = average_field_of_view_grid(
+    irf["background"][
+        "background_per_s_per_sr_per_MeV"
+    ] = average_field_of_view_grid(
         X=irf["background"]["background_vs_detx_vs_dety_per_s_per_sr_per_MeV"],
         detx_bin_edges_deg=irf["background"]["detx_bin_edges_deg"],
         dety_bin_edges_deg=irf["background"]["dety_bin_edges_deg"],
@@ -246,7 +212,9 @@ def average_instrument_response_over_field_of_view(irf, roi_opening_deg):
 
     irf["point_spread_function"]["sigma_deg"] = average_field_of_view_radial(
         X=irf["point_spread_function"]["sigma_vs_theta_deg"],
-        theta_bin_edges_deg=irf["point_spread_function"]["theta_bin_edges_deg"],
+        theta_bin_edges_deg=irf["point_spread_function"][
+            "theta_bin_edges_deg"
+        ],
         roi_opening_deg=roi_opening_deg,
     )
 
@@ -254,15 +222,13 @@ def average_instrument_response_over_field_of_view(irf, roi_opening_deg):
 
 
 def integrate_dPdMu_to_get_probability_reco_given_true(
-    dPdMu,
-    dPdMu_energy_bin_edges,
-    dPdMu_Mu_bin_edges,
-    energy_bin_edges,
+    dPdMu, dPdMu_energy_bin_edges, dPdMu_Mu_bin_edges, energy_bin_edges,
 ):
-    dPdMu_Mu_bin_centers = bin_centers(edges=dPdMu_Mu_bin_edges)
-    Mu_bin_widths = binning_utils.widths(bin_edges=dPdMu_Mu_bin_edges)
-    dPdMu_energy_bin_centers = bin_centers(edges=dPdMu_energy_bin_edges)
-    energy_bin_centers = bin_centers(edges=energy_bin_edges)
+    dPdMu_Mu_bin_centers = binning_utils.centers(dPdMu_Mu_bin_edges)
+    Mu_bin_widths = binning_utils.widths(dPdMu_Mu_bin_edges)
+    dPdMu_energy_bin_centers = binning_utils.centers(dPdMu_energy_bin_edges)
+    dPdMu_energy_bin_widths = binning_utils.widths(dPdMu_energy_bin_edges)
+    energy_bin_centers = binning_utils.centers(energy_bin_edges)
 
     N = len(dPdMu_energy_bin_edges) - 1
     Nt = len(energy_bin_edges) - 1
@@ -299,17 +265,23 @@ def integrate_dPdMu_to_get_probability_reco_given_true(
             assert Etrue_stop > Etrue_start
             Etrue_mask = np.logical_and(
                 dPdMu_energy_bin_centers >= Etrue_start,
-                dPdMu_energy_bin_centers < Etrue_stop
+                dPdMu_energy_bin_centers < Etrue_stop,
             )
             delta_Etrue = Etrue_stop - Etrue_start
 
             # integrate over Etrue
             # --------------------
-            R[t, r] = np.sum(R_I_Etrue[Etrue_mask]) / delta_Etrue
+            R[t, r] = 0.0
+            for et in range(len(dPdMu_energy_bin_centers)):
+                R[t, r] += (
+                    R_I_Etrue[et]
+                    * Etrue_mask[et]
+                    * dPdMu_energy_bin_widths[et]
+                )
+            R[t, r] /= delta_Etrue
 
     # normalize
     # ---------
-
     # ax0 -> true
     # ax1 -> reco
     probability_reco_given_true = np.nan = np.ones(shape=(Nt, Nt))
@@ -327,37 +299,38 @@ def integrate_dPdMu_to_get_probability_reco_given_true(
     return probability_reco_given_true
 
 
-
 def my_instrument_response_function(path, roi_opening_deg):
     irf = read_instrument_response_function(path=path)
-    irf = average_instrument_response_over_field_of_view(irf=irf, roi_opening_deg=roi_opening_deg)
+    irf = average_instrument_response_over_field_of_view(
+        irf=irf, roi_opening_deg=roi_opening_deg
+    )
 
     energy_bin_edges_GeV = find_common_energy_bin_edges(components=irf)
 
     signal_area_m2 = np.interp(
-        x=bin_centers(edges=energy_bin_edges_GeV),
-        xp=bin_centers(edges=A["energy_bin_edges_GeV"]),
+        x=binning_utils.centers(edges=energy_bin_edges_GeV),
+        xp=binning_utils.centers(edges=A["energy_bin_edges_GeV"]),
         fp=A["area_m2"],
     )
 
     bg_per_s_per_sr_per_GeV = np.interp(
-        x=bin_centers(edges=energy_bin_edges_GeV),
-        xp=bin_centers(edges=B["energy_bin_edges_GeV"]),
+        x=binning_utils.centers(edges=energy_bin_edges_GeV),
+        xp=binning_utils.centers(edges=B["energy_bin_edges_GeV"]),
         fp=B["bg_per_s_per_sr_per_MeV"] * 1e3,
     )
 
     psf_sigma_deg = np.interp(
-        x=bin_centers(edges=energy_bin_edges_GeV),
-        xp=bin_centers(edges=P["energy_bin_edges_GeV"]),
+        x=binning_utils.centers(edges=energy_bin_edges_GeV),
+        xp=binning_utils.centers(edges=P["energy_bin_edges_GeV"]),
         fp=P["sigma_deg"],
     )
 
     energy_confusion = log10interp2d(
-        x=bin_centers(edges=energy_bin_edges_GeV),
-        y=bin_centers(edges=energy_bin_edges_GeV),
+        x=binning_utils.centers(edges=energy_bin_edges_GeV),
+        y=binning_utils.centers(edges=energy_bin_edges_GeV),
         fp=C["confusion"],
-        xp=bin_centers(edges=C["energy_bin_edges_GeV"]),
-        yp=bin_centers(edges=C["energy_bin_edges_GeV"]),
+        xp=binning_utils.centers(edges=C["energy_bin_edges_GeV"]),
+        yp=binning_utils.centers(edges=C["energy_bin_edges_GeV"]),
     )
 
     # back ground rate
