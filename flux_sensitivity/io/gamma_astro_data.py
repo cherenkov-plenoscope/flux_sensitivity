@@ -57,31 +57,28 @@ def average_field_of_view_grid(
     return X_avg
 
 
-def find_common_energy_bin_edges(components):
-    N_min = 1e99
-    N_min_key = ""
-    for key in components:
-        N_key = len(components[key]["energy_bin_edges_GeV"]) - 1
-        if N_key < N_min:
-            N_min = N_key
-            N_min_key = str(key)
+def find_common_energy_bin_edges(components, num_bins_per_decade):
+    multiple_edges = [
+        components[k]["energy_bin_edges_GeV"] for k in components
+    ]
 
-    E_min = 0
-    E_max = 1e99
-    for key in components:
-        E_start = components[key]["energy_bin_edges_GeV"][0]
-        E_stop = components[key]["energy_bin_edges_GeV"][-1]
-        if E_start > E_min:
-            E_min = E_start
-        if E_stop < E_max:
-            E_max = E_stop
+    E_start = bu.max_lowest_edge(multiple_edges=multiple_edges)
+    E_stop = bu.min_highest_edge(multiple_edges=multiple_edges)
 
-    bin_edges = components[N_min_key]["energy_bin_edges_GeV"]
-    bins_fine = np.logical_and(bin_edges >= E_min, bin_edges <= E_max)
-    num_bins = np.sum(bins_fine)
+    (start_decade, start_bin) = bu.power10.find_upper_decade_and_bin(
+        x=E_start, num_bins_per_decade=num_bins_per_decade
+    )
+    (stop_decade, stop_bin) = bu.power10.find_lower_decade_and_bin(
+        x=E_stop, num_bins_per_decade=num_bins_per_decade
+    )
 
-    energy_bin_edges_GeV = np.geomspace(E_min, E_max, num_bins + 1)
-    return energy_bin_edges_GeV
+    return bu.power10.space(
+        start_decade=start_decade,
+        start_bin=start_bin,
+        stop_decade=stop_decade,
+        stop_bin=stop_bin,
+        num_bins_per_decade=num_bins_per_decade,
+    )
 
 
 def log10interp2d(x, y, fp, xp, yp):
@@ -206,19 +203,70 @@ def average_instrument_response_over_field_of_view(irf, roi_opening_deg):
 def integrate_dPdMu_to_get_probability_reco_given_true(
     dPdMu, dPdMu_energy_bin_edges, dPdMu_Mu_bin_edges, energy_bin_edges,
 ):
+    """
+    Convert a dispersion-matrux dPdMu to a conditional probability-matrix.
+
+    dP/dMu is the probability-density-function and must fulfill:
+
+    Int_0^\\inf \\frac{dP}{d\\mu} d\\mu = 1
+
+    with \\mu being the ratio:
+
+    \\mu = \\frac{E_{reco}}{E_{true}}.
+
+    The conditional probability R to get E_{reco} given E_{true} is:
+
+    R(i, j) = (\\Delta E_{true})^{-1} Int_\\Delta E_{true} R(i, E_{true}) dE_{true}
+
+    with:
+
+    R(i, E_true) = Int_\\mu(\\Delta E_{reco}) dP/d\\mu(E_true, \\mu) d\\mu
+
+    Parameters
+    ----------
+    dPdMu : array(N, M)
+        The dispersion-matrix.
+    dPdMu_Mu_bin_edges : array(N)
+        The true energy bin-edges used in dPdMu.
+    dPdMu_energy_bin_edges : array(M)
+        The margin's \\mu bin-edges used in dPdMu.
+        This range sould be in awide range such as 0.2 < \\mu < 5.
+    energy_bin_edges : array(J)
+        The targeted energy-bin-edges of the conditional-probability-matrix
+        to be computed.
+
+    Returns
+    -------
+    conditional-probability-matrix : array(J, J)
+        The conditional probability to measure E_{reco} given E_{true}.
+        Using energy_bin_edges.
+        ax0: true
+        ax1: reco
+    """
+    assert bu.is_strictly_monotonic_increasing(dPdMu_Mu_bin_edges)
+    assert bu.is_strictly_monotonic_increasing(dPdMu_energy_bin_edges)
+    assert bu.is_strictly_monotonic_increasing(energy_bin_edges)
+
+    assert np.all(dPdMu_Mu_bin_edges >= 0.0)
+    assert np.all(dPdMu_energy_bin_edges >= 0.0)
+    assert np.all(energy_bin_edges >= 0.0)
+
+    assert np.all(dPdMu >= 0.0)
+
     dPdMu_Mu_bin_centers = bu.centers(dPdMu_Mu_bin_edges)
     Mu_bin_widths = bu.widths(dPdMu_Mu_bin_edges)
     dPdMu_energy_bin_centers = bu.centers(dPdMu_energy_bin_edges)
     dPdMu_energy_bin_widths = bu.widths(dPdMu_energy_bin_edges)
     energy_bin_centers = bu.centers(energy_bin_edges)
 
-    N = len(dPdMu_energy_bin_edges) - 1
-    Nt = len(energy_bin_edges) - 1
+    N = len(dPdMu_Mu_bin_edges) - 1
+    M = len(dPdMu_energy_bin_edges) - 1
+    J = len(energy_bin_edges) - 1
 
-    R = np.nan = np.ones(shape=(Nt, Nt))
+    R = np.nan * np.ones(shape=(J, J))
 
-    for r in range(Nt):
-        for t in range(Nt):
+    for r in range(J):
+        for t in range(J):
 
             Etrue_center = energy_bin_centers[t]
             Ereco_start = energy_bin_edges[r]
@@ -237,7 +285,7 @@ def integrate_dPdMu_to_get_probability_reco_given_true(
             # integrate over Mu
             # -----------------
             R_I_Etrue = np.zeros(dPdMu.shape[0])
-            for u in range(len(dPdMu_Mu_bin_centers)):
+            for u in range(N):
                 R_I_Etrue += dPdMu[u, :] * Mu_mask[u] * Mu_bin_widths[u]
 
             assert R_I_Etrue.shape[0] == dPdMu.shape[0]
@@ -254,7 +302,7 @@ def integrate_dPdMu_to_get_probability_reco_given_true(
             # integrate over Etrue
             # --------------------
             R[t, r] = 0.0
-            for et in range(len(dPdMu_energy_bin_centers)):
+            for et in range(M):
                 R[t, r] += (
                     R_I_Etrue[et]
                     * Etrue_mask[et]
@@ -266,15 +314,15 @@ def integrate_dPdMu_to_get_probability_reco_given_true(
     # ---------
     # ax0 -> true
     # ax1 -> reco
-    probability_reco_given_true = np.nan = np.ones(shape=(Nt, Nt))
+    probability_reco_given_true = np.nan * np.ones(shape=(J, J))
 
-    for t in range(Nt):
+    for t in range(J):
         norm = np.sum(R[t, :])
-        for r in range(Nt):
+        for r in range(J):
             probability_reco_given_true[t, r] = R[t, r] / norm
 
     # check
-    for t in range(Nt):
+    for t in range(J):
         if np.sum(probability_reco_given_true[t, :]) > 0.0:
             assert 0.99 < np.sum(probability_reco_given_true[t, :]) < 1.01
 
