@@ -78,9 +78,9 @@ background_rate_per_s_au = np.zeros(background_rate_per_s.shape)
 for dk in fs.differential.SCENARIOS:
     print(dk)
 
-    scenario = fs.differential.make_energy_confusion_matrices_for_signal_and_background(
+    scenario = fs.differential.init_scenario_matrices_for_signal_and_background(
         probability_reco_given_true=probability_reco_given_true,
-        probability_reco_given_true_abs_unc=probability_reco_given_true_au,
+        probability_reco_given_true_au=probability_reco_given_true_au,
         scenario_key=dk,
     )
 

@@ -88,13 +88,30 @@ SCENARIOS = {
 }
 
 
-def make_energy_confusion_matrices_for_signal_and_background(
+def init_scenario_matrices_for_signal_and_background(
     probability_reco_given_true,
-    probability_reco_given_true_abs_unc,
+    probability_reco_given_true_au,
     scenario_key="broad_spectrum",
 ):
+    """
+    Make the scenario dependent matrices G for signal and B for background
+    based on the energy-confusion of the signal.
+
+    Parameters
+    ----------
+    probability_reco_given_true : array(N, N) / 1
+        Energy-confusion-matrix.
+        Conditional probability to measure E_reco given the E_true.
+        ax0: true
+        ax1: reco
+        For the signal, e.g. gamma-rays.
+    probability_reco_given_true_au : array(N, N) / 1
+        Absolute uncertainty.
+    scenario_key : str
+        Key of the chosen scenario.
+    """
     shape = probability_reco_given_true.shape
-    assert probability_reco_given_true_abs_unc.shape == shape
+    assert probability_reco_given_true_au.shape == shape
 
     if scenario_key == "perfect_energy":
         G = np.eye(N=shape[0])
@@ -105,7 +122,7 @@ def make_energy_confusion_matrices_for_signal_and_background(
 
     elif scenario_key == "broad_spectrum":
         G = np.array(probability_reco_given_true)
-        G_au = np.array(probability_reco_given_true_abs_unc)  # adopt as is
+        G_au = np.array(probability_reco_given_true_au)  # adopt as is
 
         B = np.eye(N=shape[0])
         B_au = np.zeros(shape=shape)
@@ -114,7 +131,7 @@ def make_energy_confusion_matrices_for_signal_and_background(
         # only the diagonal
         eye = np.eye(N=shape[0])
         G = eye * np.diag(probability_reco_given_true)
-        G_au = eye * np.diag(probability_reco_given_true_abs_unc)
+        G_au = eye * np.diag(probability_reco_given_true_au)
 
         B = np.eye(N=shape[0])
         B_au = np.zeros(shape=shape)
