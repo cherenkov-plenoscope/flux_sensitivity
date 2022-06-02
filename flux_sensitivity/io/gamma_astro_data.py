@@ -81,14 +81,6 @@ def find_common_energy_bin_edges(components, num_bins_per_decade):
     )
 
 
-def log10interp2d(x, y, fp, xp, yp):
-    def ll(x):
-        return x
-
-    mm_f = scipy.interpolate.interp2d(x=ll(xp), y=ll(yp), z=fp, kind="linear")
-    return mm_f(ll(x), ll(y))
-
-
 def _read_energy_dispersion(hdu):
     hdu
     return {
