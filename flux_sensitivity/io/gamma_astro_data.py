@@ -2,7 +2,7 @@ import astropy
 from astropy.io import fits
 import scipy
 from scipy.interpolate import interp2d
-import binning_utils
+import binning_utils as bu
 import numpy as np
 
 
@@ -95,15 +95,15 @@ def log10interp2d(x, y, fp, xp, yp):
 def _read_energy_dispersion(hdu):
     hdu
     return {
-        "energy_bin_edges_GeV": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["ENERG_LO"][0, :] * 1e3,
-            high_edges=hdu.data["ENERG_HI"][0, :] * 1e3,
+        "energy_bin_edges_GeV": bu.merge_low_high_edges(
+            low=hdu.data["ENERG_LO"][0, :] * 1e3,
+            high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
-        "Mu_bin_edges": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["MIGRA_LO"][0, :], high_edges=hdu.data["MIGRA_HI"][0, :],
+        "Mu_bin_edges": bu.merge_low_high_edges(
+            low=hdu.data["MIGRA_LO"][0, :], high=hdu.data["MIGRA_HI"][0, :],
         ),
-        "theta_bin_edges_deg": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["THETA_LO"][0, :], high_edges=hdu.data["THETA_HI"][0, :],
+        "theta_bin_edges_deg": bu.merge_low_high_edges(
+            low=hdu.data["THETA_LO"][0, :], high=hdu.data["THETA_HI"][0, :],
         ),
         "dPdMu_vs_theta": hdu.data["MATRIX  "][0],
     }
@@ -111,12 +111,12 @@ def _read_energy_dispersion(hdu):
 
 def _read_effective_area(hdu):
     return {
-        "energy_bin_edges_GeV": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["ENERG_LO"][0, :] * 1e3,
-            high_edges=hdu.data["ENERG_HI"][0, :] * 1e3,
+        "energy_bin_edges_GeV": bu.merge_low_high_edges(
+            low=hdu.data["ENERG_LO"][0, :] * 1e3,
+            high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
-        "theta_bin_edges_deg": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["THETA_LO"][0, :], high_edges=hdu.data["THETA_HI"][0, :],
+        "theta_bin_edges_deg": bu.merge_low_high_edges(
+            low=hdu.data["THETA_LO"][0, :], high=hdu.data["THETA_HI"][0, :],
         ),
         "area_vs_theta_m2": hdu.data["EFFAREA"][0],
     }
@@ -125,15 +125,15 @@ def _read_effective_area(hdu):
 def _read_background(hdu):
     per_MeV_to_per_GeV = 1e3
     return {
-        "energy_bin_edges_GeV": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["ENERG_LO"][0, :] * 1e3,
-            high_edges=hdu.data["ENERG_HI"][0, :] * 1e3,
+        "energy_bin_edges_GeV": bu.merge_low_high_edges(
+            low=hdu.data["ENERG_LO"][0, :] * 1e3,
+            high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
-        "detx_bin_edges_deg": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["DETX_LO"][0, :], high_edges=hdu.data["DETX_HI"][0, :],
+        "detx_bin_edges_deg": bu.merge_low_high_edges(
+            low=hdu.data["DETX_LO"][0, :], high=hdu.data["DETX_HI"][0, :],
         ),
-        "dety_bin_edges_deg": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["DETY_LO"][0, :], high_edges=hdu.data["DETY_HI"][0, :],
+        "dety_bin_edges_deg": bu.merge_low_high_edges(
+            low=hdu.data["DETY_LO"][0, :], high=hdu.data["DETY_HI"][0, :],
         ),
         "background_vs_detx_vs_dety_per_s_per_sr_per_GeV": per_MeV_to_per_GeV
         * hdu.data["BKG"][0],
@@ -142,12 +142,12 @@ def _read_background(hdu):
 
 def _read_point_spread_function(hdu):
     return {
-        "energy_bin_edges_GeV": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["ENERG_LO"][0, :] * 1e3,
-            high_edges=hdu.data["ENERG_HI"][0, :] * 1e3,
+        "energy_bin_edges_GeV": bu.merge_low_high_edges(
+            low=hdu.data["ENERG_LO"][0, :] * 1e3,
+            high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
-        "theta_bin_edges_deg": binning_utils.merge_low_high_edges(
-            low_edges=hdu.data["THETA_LO"][0, :], high_edges=hdu.data["THETA_HI"][0, :],
+        "theta_bin_edges_deg": bu.merge_low_high_edges(
+            low=hdu.data["THETA_LO"][0, :], high=hdu.data["THETA_HI"][0, :],
         ),
         "sigma_vs_theta_deg": hdu.data["SIGMA_1"][0],
     }
@@ -206,11 +206,11 @@ def average_instrument_response_over_field_of_view(irf, roi_opening_deg):
 def integrate_dPdMu_to_get_probability_reco_given_true(
     dPdMu, dPdMu_energy_bin_edges, dPdMu_Mu_bin_edges, energy_bin_edges,
 ):
-    dPdMu_Mu_bin_centers = binning_utils.centers(dPdMu_Mu_bin_edges)
-    Mu_bin_widths = binning_utils.widths(dPdMu_Mu_bin_edges)
-    dPdMu_energy_bin_centers = binning_utils.centers(dPdMu_energy_bin_edges)
-    dPdMu_energy_bin_widths = binning_utils.widths(dPdMu_energy_bin_edges)
-    energy_bin_centers = binning_utils.centers(energy_bin_edges)
+    dPdMu_Mu_bin_centers = bu.centers(dPdMu_Mu_bin_edges)
+    Mu_bin_widths = bu.widths(dPdMu_Mu_bin_edges)
+    dPdMu_energy_bin_centers = bu.centers(dPdMu_energy_bin_edges)
+    dPdMu_energy_bin_widths = bu.widths(dPdMu_energy_bin_edges)
+    energy_bin_centers = bu.centers(energy_bin_edges)
 
     N = len(dPdMu_energy_bin_edges) - 1
     Nt = len(energy_bin_edges) - 1
@@ -287,14 +287,14 @@ def integrate_background_rate_in_onregion(
     energy_bin_edges_GeV,
 ):
     psf_sigma_rad = np.deg2rad(point_spread_function_sigma_deg)
-    energy_bin_width_GeV = binning_utils.widths(energy_bin_edges_GeV)
+    energy_bin_widths_GeV = bu.widths(energy_bin_edges_GeV)
 
     background_rate_per_s = np.zeros(len(energy_bin_edges_GeV) - 1)
     for e in range(len(energy_bin_edges_GeV) - 1):
         psf_solid_angle_sr = np.pi * psf_sigma_rad[e] ** 2
         background_rate_per_s[e] = (
             background_per_s_per_sr_per_GeV[e]
-            * energy_bin_width_GeV[e]
+            * energy_bin_widths_GeV[e]
             * psf_solid_angle_sr
         )
     return background_rate_per_s

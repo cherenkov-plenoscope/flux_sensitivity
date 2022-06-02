@@ -21,7 +21,7 @@ setuptools.setup(
         "flux_sensitivity": [os.path.join("tests", "resources", "*")]
     },
     install_requires=[
-        "binning_utils_sebastian-achim-mueller>=0.0.3",
+        "binning_utils_sebastian-achim-mueller>=0.0.4",
         "propagate_uncertainties_sebastian-achim-mueller>=0.2.2",
     ],
     classifiers=[
