@@ -36,13 +36,17 @@
 \newcommand{\dd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
 %
 \subsection*{Abstract}
-The 'differential sensitivity' is a common measure for performance in the atmospheric Cherenkov-method.
+The 'differential sensitivity' is a common measure for an instrument's performance in the atmospheric Cherenkov-method.
 %
-However, when the reconstruction of energy in our instrument is not perfect there can be multiple reasonable ways to express differential sensitivity.
+However, when the instrument's reconstruction of energy is not perfect there exist multiple reasonable approaches to estimate differential sensitivity.
 %
-Each way describes a slightly different astronomical scenario.
+All these approaches differ in how they respect the non perfect reconstruction of energy.
 %
-Here I want to explore these different scenarios for myself.
+When first estimating a differential sensitivity myself, I realized that there exist slightly different flavours in the atmospheric Cherenkov-method.
+%
+As the resulting estimates for the differential sensitivity differ, we have to ask ourselves what exactly are the different astronomical questions being answered by these estimates.
+%
+Here I list and explore these different astronomical questions.
 %
 \section{Observables, Background and the On-Off-Measurement}
 \label{SecObservablesAndOnOff}
@@ -93,12 +97,12 @@ But for neutrinos the differential sensitivity is about a diffuse source \cite{m
 %
 \section{A brief detour into reality}
 %
-In practice, we use $(n+1)$ edges for $n$ bins in energy
+In practice, we use $N$ bins in energy defined by $(N+1)$ edges
 %
 \begin{eqnarray*}
-E[e] &=& [e_1, e_2, \cdots, e_{n+1}]\\
+E[e] &=& [e_1, e_2, \cdots, e_{N+1}]\\
 \text{unit} &:& \text{energy} / \text{GeV}\\
-\text{dim} &:& \text{list of}\,\,(n + 1)\,\,\text{floats}\\
+\text{shape} &:& \text{list of}\,\,(N + 1)\,\,\text{floats}\\
 \text{code} &:& \verb|energy_bin_edges_GeV|
 \end{eqnarray*}
 %
@@ -106,9 +110,9 @@ and denote the width of the bins as
 %
 \begin{eqnarray*}
 \text{d}E[e] &=& E[e+1] - E[e]\\
-&=& [e_2-e_1, e_3-e_2, \cdots, e_{n+1}-e_n]\\
+&=& [e_2-e_1, e_3-e_2, \cdots, e_{N+1}-e_N]\\
 \text{unit} &:& \text{energy} / \text{GeV}\\
-\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
 \text{code} &:& \verb|energy_bin_width_GeV|
 \end{eqnarray*}
 %
@@ -128,9 +132,9 @@ Let's start with the common output of differential sensitivity in the atmospheri
 This is the minimal required parallel flux of gamma-rays
 %
 \begin{eqnarray*}
-\dd{V_\gamma}{E}[e] &=& [dv_1, \, dv_2, \, \cdots, \, dv_n]\\
+\dd{V_\gamma}{E}[e] &=& [dv_1, \, dv_2, \, \cdots, \, dv_N]\\
 \text{unit} &:& \text{area}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
-\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
 \text{code} &:& \verb|dVdE|
 \end{eqnarray*}
 %
@@ -147,7 +151,7 @@ On the input side we got some room for different scenarios.
 \begin{eqnarray*}
 T_\text{obs} && \\
 \text{unit} &:& \text{time} / s\\
-\text{dim} &:& \text{float}\\
+\text{shape} &:& \text{float}\\
 \text{code} &:& \verb|observation_time_s|
 \end{eqnarray*}
 %
@@ -175,10 +179,10 @@ The relevant contributions to the background are the cosmic-rays. Some instrumen
 \subsubsection*{Diffuse Flux of Cosmic-Rays}
 %
 \begin{eqnarray*}
-\dd{F_p}{E}[e] &=& [df_{p1}, df_{p2}, \cdots, df_{pn}]\\
+\dd{F_p}{E}[e] &=& [df_{p1}, df_{p2}, \cdots, df_{pN}]\\
 \text{unit} &:& \text{area}^{-1} \text{(solid angle)}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\, \text{sr}^{-1}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
-\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
-\text{code} &:& \verb|dFdE_{p}|
+\text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
+\text{code} &:& \verb|differential_flux_per_m2_per_sr_per_s_per_GeV|
 \end{eqnarray*}
 %
 The diffuse, differential flux for every cosmic-ray $p$ in $\mathbb{P}_\text{background}$. This might be taken from measurements of space-born instruments e.g. \cite{aguilar2014precision,aguilar2015precision}.
@@ -187,24 +191,24 @@ More precisely: For Cherenkov-instruments observing at energies at and below the
 %
 For such instruments this includes the geomagnetic cutoff, and the flux of air-showers induced by terrestrial, 'secondary' particles \cite{lipari2002fluxes}.
 %
-\subsubsection*{Effective Acceptance for Cosmic-Rays After All Cuts}
+\subsubsection*{Effective Acceptance for Cosmic-Rays (Background) After All Cuts}
 \begin{eqnarray*}
-Q_p[e] &=& [q_1, q_2, \cdots, q_n]\\
+Q_p[e] &=& [q_{p1}, q_{p2}, \cdots, q_{pN}]\\
 \text{unit} &:& \text{area} \, \text{(solid angle)} / \text{m}^{2}\,\text{sr}\\
-\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
-\text{code} &:& \verb|effective_acceptance_{p}_m2_sr|
+\text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
+\text{code} &:& \verb|acceptance_m2_sr|
 \end{eqnarray*}
-%
-This product of area and solid angle is also often called etendue.
 %
 The effective acceptance of our instrument to detect an air-shower induced by cosmic-ray $p$ with true energy $E$ that was falsely classified to be a gamma-ray.
 %
-\subsubsection*{Effective Area for Gamma-Rays After All Cuts}
+Acceptance, the product of area and solid angle, is also called etendue.
+%
+\subsubsection*{Effective Area for Gamma-Rays (Signal) After All Cuts}
 \begin{eqnarray*}
-A_\gamma[e] &=& [a_1, a_2, \cdots, a_n]\\
+A_\gamma[e] &=& [a_{\gamma 1}, a_{\gamma 2}, \cdots, a_{\gamma N}]\\
 \text{unit} &:& \text{area} / \text{m}^{2}\\
-\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
-\text{code} &:& \verb|signal_effective_area_m2|
+\text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
+\text{code} &:& \verb|signal_area_m2|
 \end{eqnarray*}
 %
 The effective area of our instrument to detect a gamma-ray with true energy $E$ which the instrument positively classifies to be a gamma-ray.
@@ -219,13 +223,13 @@ Our instrument's conditional probability
 M_p[e, e'] &=& M_p(E' \vert E)\\
 &=&
   \left[ {\begin{array}{ccc}
-    m_{11} & \cdots & m_{1n}\\
+    m_{11} & \cdots & m_{1N}\\
     \vdots & \ddots & \vdots\\
-    m_{n1} & \cdots & m_{nn}\\
+    m_{N1} & \cdots & m_{NN}\\
   \end{array} } \right]\\
 \text{unit} &:& \text{probability}/1\\
-\text{dim} &:& \text{matrix of}\,\,n \times n \,\,\text{floats}\\
-\text{code} &:& \verb|M_p|
+\text{shape} &:& \text{matrix of}\,\,N \times N \,\,\text{floats}\\
+\text{code} &:& \verb|energy_reco_given_true_ax0true_ax1reco|
 \end{eqnarray*}
 %
 to reconstruct cosmic particle $p$ to have reconstructed energy $E'$ given the particle has true energy $E$.
@@ -234,10 +238,10 @@ We need this for every particle $p$ in $\gamma \cup P_\text{background}$.
 %
 Here only events which are classified to be gamma-rays contribute, i.e. same cuts as in $Q_p$ and $A_\gamma$.
 %
-All particles $p$ have to fulfill
+The integral in reconstructed energy $e'$ over the conditional probability has to be normalized
 %
 \begin{eqnarray*}
-\sum_{e'} M_p[e, e'] = 1.
+\sum_{e'} M_p[e, e'] = 1, \forall e.
 \end{eqnarray*}
 %
 \subsubsection*{Algorithm $C$ to Estimate the Critical Number of Signal-Counts $N_S$}
@@ -247,7 +251,7 @@ After we will have estimated the number of background-counts in the on-region $\
 \begin{eqnarray*}
 N_S[e'] &=& C(\hat{N}_B[e'],\,\,S,\,\,\dots)\\
 \text{unit} &:& \text{intensity}/1\\
-\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
 \text{code} &:& \verb|critical_signal_counts_1|
 \end{eqnarray*}
 %
@@ -341,7 +345,7 @@ G^k[e, e'] &=&
     g_{n1} & \cdots & g_{nn}\\
   \end{array} } \right]\\
 \text{unit} &:& \text{weights for signal}/1\\
-\text{dim} &:& \text{matrix of}\,\,n \times n \,\,\text{floats},
+\text{shape} &:& \text{matrix of}\,\,n \times n \,\,\text{floats},
 \end{eqnarray*}
 %
 and
@@ -354,7 +358,7 @@ B^k[e, e'] &=&
     b_{n1} & \cdots & b_{nn}\\
   \end{array} } \right]\\
 \text{unit} &:& \text{weights for background}/1\\
-\text{dim} &:& \text{matrix of}\,\,n \times n \,\,\text{floats}.
+\text{shape} &:& \text{matrix of}\,\,n \times n \,\,\text{floats}.
 \end{eqnarray*}
 %
 Here, I use the same algorithm $C$ to compute the minimal number of signal-counts for all scenarios, so the differences discussed here are only in $G$ and $B$.
@@ -423,12 +427,12 @@ This means the that the elements off the diagonal in $G$ can be larger than zero
 %
 This might be interesting for a general detection of a source which is assumed to have a broad spectrum, and actual shape of the spectrum does not matter too much.
 %
-It is also a common choice when the reconstruction of energy is 'good', thus $M_\gamma \approx \mathrm{eye}(n)$.
+It is also a common choice when the reconstruction of energy is 'good', thus $M_\gamma \approx \mathrm{eye}(N)$.
 %
 \begin{eqnarray}
 G[e, e'] &=& M_{\gamma}[e, e']
 \\
-B[e, e'] &=& \mathrm{eye}(n)
+B[e, e'] &=& \mathrm{eye}(N)
 \end{eqnarray}
 %
 \begin{center}
@@ -449,7 +453,7 @@ However, we still respect that $M_{\gamma} \neq \mathrm{eye}(n)$ and thus reduce
 \begin{eqnarray}
 G[e, e'] &=& \mathrm{diag}(M_{\gamma}[e, e'])
 \\
-B[e, e'] &=& \mathrm{eye}(n)
+B[e, e'] &=& \mathrm{eye}(N)
 \end{eqnarray}
 %
 \begin{center}
@@ -470,7 +474,7 @@ This method is proposed by Werner Hofmann.
 It can be done with an actual instrument without further assumptions, and it can show the true energy in the differential sensitivity what makes this scenario both safe and meaningful for astronomy.
 %
 \begin{eqnarray}
-G[e, e'] &=& c \, \, \mathrm{eye}(n)
+G[e, e'] &=& c \, \, \mathrm{eye}(N)
 \\
 B[e, e'] &=& \mathrm{bellmask}(M_{\gamma}[e, e'], \, c)
 \end{eqnarray}
@@ -482,9 +486,9 @@ energy-label & true\\
 \end{tabular}
 \end{center}
 %
-The $\mathrm{bellmask}(M_{\gamma}, c)$ is a matrix with the shape $(n,n)$ containing weights in range $[0$ to $1]$.
+The $\mathrm{bellmask}$ is a matrix with shape $(N,N)$ containing weights in range $[0$ to $1]$.
 %
-The $\mathrm{bellmask}$ only depends on the energy confusion $M_{\gamma}$ and the containment $c$.
+The $\mathrm{bellmask}$ depends on the energy confusion $M_{\gamma}$ and the containment $c$.
 %
 For each bin in true energy $e$, the row $\mathrm{bellmask}()[e, :]$ marks the bins in reconstructed energy $e'$ over which we have to integrate in order to contain the fraction $c$ of the events with true energy $e$.
 %
