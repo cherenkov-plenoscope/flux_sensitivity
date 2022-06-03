@@ -1,27 +1,3 @@
-"""
-Variables
----------
-T_obs, T_\\text{obs}
-    Effective observation-time.
-
-N_on, N_\\text{on}
-    On source counts.
-
-N_off, N_\\text{off}
-    On source counts.
-
-N_S, N_\\text{S}
-    Signal counts.
-    N_S = N_on - alpha * N_off
-
-hatN_B, \\hat{N}_B
-    Expected num. background-counts in on-region. Included in N_on.
-    hatN_B = alpha * N_off
-
-S, S
-    Significance.
-
-"""
 import numpy as np
 import lima1983analysis
 import propagate_uncertainties as pru
