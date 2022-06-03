@@ -1,0 +1,501 @@
+\documentclass{article}%
+\usepackage[T1]{fontenc}%
+\usepackage[utf8]{inputenc}%
+\usepackage{lmodern}%
+\usepackage{booktabs}%
+\usepackage{textcomp}%
+\usepackage{lastpage}%
+\usepackage{geometry}%
+\usepackage{amsmath}%
+\usepackage{amssymb}%
+\geometry{
+    paper=a4paper,
+    head=0cm,
+    left=2cm,
+    right=2cm,
+    top=0cm,
+    bottom=2cm,
+    includehead=True,
+    includefoot=True
+}%
+\usepackage{graphicx}%
+%
+\usepackage{multicol}%
+\usepackage{lipsum}%
+\usepackage{float}%
+\usepackage{verbatim}%
+\title{
+    On Differential Sensitivity in the Atmospheric Cherenkov-Method and Astronomy with Gamma-Rays
+}%
+\author{Sebastian A. Mueller}%
+\date{\today{}}%
+%
+\begin{document}%
+\maketitle%
+%
+\newcommand{\dd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+%
+\subsection*{Abstract}
+The 'differential sensitivity' is a common measure for performance in the atmospheric Cherenkov-method.
+%
+However, when the reconstruction of energy in our instrument is not perfect there can be multiple reasonable ways to express differential sensitivity.
+%
+Each way describes a slightly different astronomical scenario.
+%
+Here I want to explore these different scenarios for myself.
+%
+\section{Observables, Background and the On-Off-Measurement}
+\label{SecObservablesAndOnOff}
+\subsection*{Observables and Background}
+%
+For every air-shower, our instrument reconstructs the primary particle's type $p'$, trajectory $(\Theta', \phi')$, energy $E'$, and arrival-time $t'$.
+%
+The prime ($'$) indicates a reconstructed quantity, such as reconstructed energy $E'$.
+%
+Based on the statistics of multiple reconstructed air-showers, the atmospheric Cherenkov-method can answer astronomical questions.
+%
+However, the atmospheric Cherenkov-method suffers from a large irreducible background caused by air-showers induced by cosmic-rays.
+%
+Therefore, to answer astronomical questions we run on-off-measurements where a signal has to emerge out of the irreducible background.
+%
+\subsection*{On-Off-measurements to Answer Astronomical Questions}
+Depending on the astronomical question, the space of observables is divided into on- and off-regions in order to maximize signal over background.
+%
+For example, when the astronomical question asks for the existence of a pulsar emitting gamma-rays at a certain energy we divide the space of directions, energy, and time accordingly.
+%
+When we ask for the very existence of a point-source, we only divide the space of directions.
+%
+When we ask for the existence of a spectral line in energy over a large solid angle, such as the galactic plane, we only divide the space of energy, and so on.
+%
+When we look for gamma-rays, we always divide the space of particle-type $p'$ to favor gamma-rays.
+%
+And when we ask for e.g. the moon-shadow of leptons, we will shift the on-region in the space of particle-type accordingly.
+%
+\section{The Astronomical Question answered by Differential Sensitivity}
+\label{SecAstronomicalQuastion}
+% point-source [cta2018baseline, cortina2016machete, ]
+% LiMa 17      [cortina2016machete]
+The differential sensitivity commonly discussed in the atmospheric Cherenkov-method shows how much flux of gamma-rays, coming from a point-source and at a specific energy, is required to claim a detection within a given time of observation.
+%
+This can also be discussed as the performance of an instrument.
+%
+\\
+%
+However, this formulation is not very specific and might be discussed in different scenarios with different rooms for interpretation.
+%
+\\
+%
+Depending on the branch of astronomy 'differential sensitivity' might be about different astronomic questions.
+%
+In gamma-ray astronomy this is often implicitly about point-sources, be it in the atmospheric Cherenkov-method \cite{cta2018baseline,cortina2016machete} or in space born instruments \cite{wood2016fermiperformance}.
+%
+But for neutrinos the differential sensitivity is about a diffuse source \cite{marinelli2021km3netarca}.
+%
+\section{A brief detour into reality}
+%
+In practice, we use $(n+1)$ edges for $n$ bins in energy
+%
+\begin{eqnarray*}
+E[e] &=& [e_1, e_2, \cdots, e_{n+1}]\\
+\text{unit} &:& \text{energy} / \text{GeV}\\
+\text{dim} &:& \text{list of}\,\,(n + 1)\,\,\text{floats}\\
+\text{code} &:& \verb|energy_bin_edges_GeV|
+\end{eqnarray*}
+%
+and denote the width of the bins as
+%
+\begin{eqnarray*}
+\text{d}E[e] &=& E[e+1] - E[e]\\
+&=& [e_2-e_1, e_3-e_2, \cdots, e_{n+1}-e_n]\\
+\text{unit} &:& \text{energy} / \text{GeV}\\
+\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{code} &:& \verb|energy_bin_width_GeV|
+\end{eqnarray*}
+%
+I will represent all the following quantities as discrete vectors or matrices.
+%
+I can not effort the mental mapping from infinitesimal representations to the actual implementation in the code.
+%
+\section{Common Ground}
+\label{SecCommonGround}
+%
+Here I list what I believe is the common ground, for all scenarios of differential sensitivity in the atmospheric Cherenkov-method.
+%
+\subsection{Output}
+%
+Let's start with the common output of differential sensitivity in the atmospheric Cherenkov-method.
+%
+This is the minimal required parallel flux of gamma-rays
+%
+\begin{eqnarray*}
+\dd{V_\gamma}{E}[e] &=& [dv_1, \, dv_2, \, \cdots, \, dv_n]\\
+\text{unit} &:& \text{area}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
+\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{code} &:& \verb|dVdE|
+\end{eqnarray*}
+%
+in order to claim a detection.
+%
+The property of the flux being parallel is about what the flux of a point-source looks like to a far distant observer.
+%
+\subsection{Input}
+%
+On the input side we got some room for different scenarios.
+%
+\subsubsection*{Observation-Time}
+%
+\begin{eqnarray*}
+T_\text{obs} && \\
+\text{unit} &:& \text{time} / s\\
+\text{dim} &:& \text{float}\\
+\text{code} &:& \verb|observation_time_s|
+\end{eqnarray*}
+%
+The observation-time $T_\text{obs}$ is the accumulated duration our instrument was ready to trigger and record an event.
+%
+Commonly, Cherenkov-telescopes show $T_\text{obs} = 50\,$h or $T_\text{obs} = 1800\,$s. for todays quickest transients.
+%
+\subsubsection*{The Set of Contributions to the Background}
+%
+\begin{eqnarray*}
+\mathbb{P}_\text{background} &=& \{
+{_1^1}\text{H},\,\,
+{_2^4}\text{He},\,\,
+\text{e}^{+},\,\,
+\text{e}^{-},\,\,
+\dots{}\,\,
+\text{night-sky},\,\,
+\dots{}\,\,
+\text{artifacts}
+\}
+\end{eqnarray*}
+%
+The relevant contributions to the background are the cosmic-rays. Some instruments might also have a relevant contribution of accidental triggers, and artifacts related to the instrument.
+%
+\subsubsection*{Diffuse Flux of Cosmic-Rays}
+%
+\begin{eqnarray*}
+\dd{F_p}{E}[e] &=& [df_{p1}, df_{p2}, \cdots, df_{pn}]\\
+\text{unit} &:& \text{area}^{-1} \text{(solid angle)}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\, \text{sr}^{-1}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
+\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{code} &:& \verb|dFdE_{p}|
+\end{eqnarray*}
+%
+The diffuse, differential flux for every cosmic-ray $p$ in $\mathbb{P}_\text{background}$. This might be taken from measurements of space-born instruments e.g. \cite{aguilar2014precision,aguilar2015precision}.
+%
+More precisely: For Cherenkov-instruments observing at energies at and below the geomagnetic cutoff this is not the flux of cosmic particles, but the flux of air-showers.
+%
+For such instruments this includes the geomagnetic cutoff, and the flux of air-showers induced by terrestrial, 'secondary' particles \cite{lipari2002fluxes}.
+%
+\subsubsection*{Effective Acceptance for Cosmic-Rays After All Cuts}
+\begin{eqnarray*}
+Q_p[e] &=& [q_1, q_2, \cdots, q_n]\\
+\text{unit} &:& \text{area} \, \text{(solid angle)} / \text{m}^{2}\,\text{sr}\\
+\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{code} &:& \verb|effective_acceptance_{p}_m2_sr|
+\end{eqnarray*}
+%
+This product of area and solid angle is also often called etendue.
+%
+The effective acceptance of our instrument to detect an air-shower induced by cosmic-ray $p$ with true energy $E$ that was falsely classified to be a gamma-ray.
+%
+\subsubsection*{Effective Area for Gamma-Rays After All Cuts}
+\begin{eqnarray*}
+A_\gamma[e] &=& [a_1, a_2, \cdots, a_n]\\
+\text{unit} &:& \text{area} / \text{m}^{2}\\
+\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{code} &:& \verb|signal_effective_area_m2|
+\end{eqnarray*}
+%
+The effective area of our instrument to detect a gamma-ray with true energy $E$ which the instrument positively classifies to be a gamma-ray.
+%
+$A_\gamma$ is estimated in simulations applying the same cuts as in $Q_p$.
+%
+\subsubsection*{Conditional Probability to Confuse Energy}
+%
+Our instrument's conditional probability
+%
+\begin{eqnarray*}
+M_p[e, e'] &=& M_p(E' \vert E)\\
+&=&
+  \left[ {\begin{array}{ccc}
+    m_{11} & \cdots & m_{1n}\\
+    \vdots & \ddots & \vdots\\
+    m_{n1} & \cdots & m_{nn}\\
+  \end{array} } \right]\\
+\text{unit} &:& \text{probability}/1\\
+\text{dim} &:& \text{matrix of}\,\,n \times n \,\,\text{floats}\\
+\text{code} &:& \verb|M_p|
+\end{eqnarray*}
+%
+to reconstruct cosmic particle $p$ to have reconstructed energy $E'$ given the particle has true energy $E$.
+%
+We need this for every particle $p$ in $\gamma \cup P_\text{background}$.
+%
+Here only events which are classified to be gamma-rays contribute, i.e. same cuts as in $Q_p$ and $A_\gamma$.
+%
+All particles $p$ have to fulfill
+%
+\begin{eqnarray*}
+\sum_{e'} M_p[e, e'] = 1.
+\end{eqnarray*}
+%
+\subsubsection*{Algorithm $C$ to Estimate the Critical Number of Signal-Counts $N_S$}
+%
+After we will have estimated the number of background-counts in the on-region $\hat{N}_B$, we use an algorithm $C$ to estimate the minimal number of signal-counts in the on-region
+%
+\begin{eqnarray*}
+N_S[e'] &=& C(\hat{N}_B[e'],\,\,S,\,\,\dots)\\
+\text{unit} &:& \text{intensity}/1\\
+\text{dim} &:& \text{list of}\,\,n\,\,\text{floats}\\
+\text{code} &:& \verb|critical_signal_counts_1|
+\end{eqnarray*}
+%
+which is required to claim a detection.
+%
+There exist multiple flavors of $C$.
+%
+A minimal input to $C$ might be:
+%
+\begin{itemize}
+%
+\item{} The number of background-counts in the on-region $\hat{N}_B$.
+%
+\item{} The minimal significance $S$ a signal has to have in order to be considered unlikely to be a fluctuation in the background.
+%
+$S$ is commonly chosen to be $5\sigma$, (std.\,dev.).
+%
+\item{} A method to estimate $S$ based on the counts in the on- and off-regions. Here commonly Equation\,17 in \cite{li1983analysis} is used.
+%
+\item{} An estimate for the systematic uncertainties of the instrument. This commonly demands $N_S/\hat{N}_B >\approx 5\%$.
+%
+When our instrument runs into this limit, more observation-time $T_\text{obs}$ will no longer decrease the required flux to claim a detection.
+%
+\item{}
+A limit on the minimal amount of statistics. This is commonly used to make sure that the estimator for $S$ operates in a valid range of inputs.
+%
+This might require the counts in the on- and off-regions to be above a minimal threshold e.g. $N_\text{on} > 10$.
+%
+\end{itemize}
+%
+\subsection{Procedure}
+\label{SubSecProcedure}
+%
+There are three basic steps to compute the differential sensitivity.
+%
+The names of variables are adopted from \cite{li1983analysis}.
+%
+\subsubsection*{1) Computing the number of background-counts $\hat{N}_B[e']$}
+%
+The total number of background-counts in the on-region is
+%
+\begin{eqnarray}
+\hat{N}_B[e'] &=& \hat{R}^k_B[e'] \, T_\text{obs}
+\end{eqnarray}
+%
+is the total rate $\hat{R}^k_B[e']$ of background times the observation-time $T_\text{obs}$.
+%
+And the total rate of background is
+%
+\begin{eqnarray}
+\hat{R}^k_B[e'] &=& \sum_{p} \hat{R}^k_p[e']
+\end{eqnarray}
+%
+the sum of the individual rates $\hat{R}^k_p[e']$ from each contribution $p$.
+%
+Now the individual rates $\hat{R}^k_p[e']$ depend on the scenario $k$.
+%
+\subsubsection*{2) Computing the number of required signal-counts $N_S[e']$}
+%
+We estimate the required number of signal-counts
+\begin{eqnarray}
+N_S[e'] &=& C^k(\hat{N}_B[e'],\,\,S,\,\,\dots)
+\end{eqnarray}
+in each energy-bin $e'$. As discussed before, the algorithm $C^k$ might depend on the scenario $k$.
+%
+\subsubsection*{3) Computing the flux $\dd{V}{E}[e']$}
+%
+We finally estimate the minimal flux of gamma-rays required to claim a detection
+%
+\begin{eqnarray}
+\dd{V}{E}[e'] &=& \frac{N_S[e']}{{T_\text{obs}}\,{A^k_\gamma}[e']\,\text{d}E[e']}.
+\end{eqnarray}
+%
+This involves at least the required number of signal-counts $N_S[e']$, the observation-time $T_\text{obs}$.
+%
+The effective area for gamma-rays $A^k_\gamma[e']$ depends on the scenario $k$.
+%
+\section{Representing and Applying different Scenarios}
+%
+So far I encountered four scenarios which answer different astronomical questions.
+%
+Each scenario gives a different pair of $A^k_\gamma[e']$, and $\hat{R}^k_p[e']$ what is the missing input to the procedure in Section \ref{SubSecProcedure}.
+%
+At least the four scenarios which I encountered so far can be represented using two matrices
+%
+\begin{eqnarray*}
+G^k[e, e'] &=&
+  \left[ {\begin{array}{ccc}
+    g_{11} & \cdots & g_{1n}\\
+    \vdots & \ddots & \vdots\\
+    g_{n1} & \cdots & g_{nn}\\
+  \end{array} } \right]\\
+\text{unit} &:& \text{weights for signal}/1\\
+\text{dim} &:& \text{matrix of}\,\,n \times n \,\,\text{floats},
+\end{eqnarray*}
+%
+and
+%
+\begin{eqnarray*}
+B^k[e, e'] &=&
+  \left[ {\begin{array}{cccc}
+    b_{11} & \cdots & b_{1n}\\
+    \vdots & \ddots & \vdots\\
+    b_{n1} & \cdots & b_{nn}\\
+  \end{array} } \right]\\
+\text{unit} &:& \text{weights for background}/1\\
+\text{dim} &:& \text{matrix of}\,\,n \times n \,\,\text{floats}.
+\end{eqnarray*}
+%
+Here, I use the same algorithm $C$ to compute the minimal number of signal-counts for all scenarios, so the differences discussed here are only in $G$ and $B$.
+%
+\subsection{Applying a Scenario $k$}
+%
+\subsubsection*{Applying $G$, to get Effective Area for Gamma-Rays}
+%
+The scenario's effective area for gamma-rays
+%
+\begin{eqnarray}
+A^k[e'] &=& \sum_{e} \, G^k[e, e'] \, A[e]
+\end{eqnarray}
+%
+will be used to compute the critical flux $\dd{V}{E}[e']$ based on the critical number of signal-counts $N_s[e']$.
+%
+\subsubsection*{Applying $B$, to Integrate over Background}
+%
+The rate of background in the on-region which is caused by contribution $p$ is
+%
+\begin{eqnarray}
+R^k_p[e'] &=& \sum_{e} B^k[e, e'] \, R_p[e]
+\end{eqnarray}
+%
+where $R_p[e]$ is the rate of background coming from contribution $p$ in reconstructed energy.
+%
+This rate
+%
+\begin{eqnarray}
+R_p[e'] &=& \sum_{e} \text{d}E[e] \, \dd{F_p}{E}[e] \, Q_p[e] \, M_p[e, e']
+\label{EqRp}
+\end{eqnarray}
+%
+ is independent of the scenario and only depends on the contribution's $p$'s flux $\dd{F_p}{E}[e]$, the instrument's acceptance for this contribution $Q_p[e]$, and the instrument's confusion in energy $M_p[e, e']$ for this contribution.
+%
+\section{Scenarios}
+%
+I am happy to receive suggestions for more meaningful names to these scenarios.
+%
+\subsection{Perfect Energy}
+%
+This is not realistic. This simply assumes that the instrument's reconstruction for true gamma-rays is perfect.
+%
+The true cosmic-rays are still confused in energy, see Equation \ref{EqRp}.
+%
+\begin{eqnarray}
+G[e, e'] &=& \mathrm{eye}(n)
+\\
+B[e, e'] &=& \mathrm{eye}(n)
+\end{eqnarray}
+%
+\begin{center}
+\begin{tabular}{ll}
+spectrum of source & narrow band\\
+energy-label & true\\
+\end{tabular}
+\end{center}
+%
+\subsection{Broad Spectrum}
+%
+This assumes that the source emits gamma-rays in all bins of true energy.
+%
+True gamma-rays which have their energy confused to wrong bins can still contribute to the signal and are not cut away.
+%
+This means the that the elements off the diagonal in $G$ can be larger than zero.
+%
+This might be interesting for a general detection of a source which is assumed to have a broad spectrum, and actual shape of the spectrum does not matter too much.
+%
+It is also a common choice when the reconstruction of energy is 'good', thus $M_\gamma \approx \mathrm{eye}(n)$.
+%
+\begin{eqnarray}
+G[e, e'] &=& M_{\gamma}[e, e']
+\\
+B[e, e'] &=& \mathrm{eye}(n)
+\end{eqnarray}
+%
+\begin{center}
+\begin{tabular}{ll}
+spectrum of source & broad\\
+energy-label & reconstructed\\
+\end{tabular}
+\end{center}
+%
+\subsection{Band-Spectrum}
+%
+This assumes that the source emits gamma-rays only in a single bin of energy, i.e. the source's spectrum is a narrow band.
+%
+Here we only take true gamma-rays into account which end inside the bin of reconstructed energy which equals the true, and expected energy.
+%
+However, we still respect that $M_{\gamma} \neq \mathrm{eye}(n)$ and thus reduce the probability according to the diagonal of the confusion-matrix $M_{\gamma}$.
+%
+\begin{eqnarray}
+G[e, e'] &=& \mathrm{diag}(M_{\gamma}[e, e'])
+\\
+B[e, e'] &=& \mathrm{eye}(n)
+\end{eqnarray}
+%
+\begin{center}
+\begin{tabular}{ll}
+spectrum of source & narrow band\\
+energy-label & reconstructed\\
+\end{tabular}
+\end{center}
+%
+\subsection{Bell-Spectrum}
+%
+This assumes the same spectrum of the source as the Band-Spectrum.
+%
+Now unlike in all other scenarios, here we widen the range of background over which we have to integrate in order to collect a certain fraction $c$ of the signal.
+%
+This method is proposed by Werner Hofmann.
+%
+It can be done with an actual instrument without further assumptions, and it can show the true energy in the differential sensitivity what makes this scenario both safe and meaningful for astronomy.
+%
+\begin{eqnarray}
+G[e, e'] &=& c \, \, \mathrm{eye}(n)
+\\
+B[e, e'] &=& \mathrm{bellmask}(M_{\gamma}[e, e'], \, c)
+\end{eqnarray}
+%
+\begin{center}
+\begin{tabular}{ll}
+spectrum of source & narrow band\\
+energy-label & true\\
+\end{tabular}
+\end{center}
+%
+The $\mathrm{bellmask}(M_{\gamma}, c)$ is a matrix with the shape $(n,n)$ containing weights in range $[0$ to $1]$.
+%
+The $\mathrm{bellmask}$ only depends on the energy confusion $M_{\gamma}$ and the containment $c$.
+%
+For each bin in true energy $e$, the row $\mathrm{bellmask}()[e, :]$ marks the bins in reconstructed energy $e'$ over which we have to integrate in order to contain the fraction $c$ of the events with true energy $e$.
+%
+The actual implementation of $\mathrm{bellmask}$ might differ, as it is not straight forward how to treat multiple maxima in $M_\gamma(E'\vert E)$, or how to handle discrete binning, but it has to fulfill
+%
+\begin{eqnarray}
+c &=& \sum_{e'} \mathrm{bellmask}[e ,e'] \, M_{\gamma}[e', e], \,\,\,\,\,\, \forall e.
+\end{eqnarray}
+%
+I named it bell-spectrum as the mask in $B$ is a bell when $M_\gamma$ is a bell itself. But this name is misleading as it suggests the source of gamma-rays has a bell like spectrum.
+%
+\bibliographystyle{apalike}%
+\bibliography{references}%
+\end{document}
