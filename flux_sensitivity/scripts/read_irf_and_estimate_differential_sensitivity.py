@@ -9,7 +9,9 @@ import numpy as np
 
 parser = argparse.ArgumentParser(
     prog="estimate_differential_sensitivity",
-    description=("Reads an instrument's response function from a gamma-astro-data-fits-file and estimates the instrument's differential sensitivity"),
+    description=(
+        "Reads an instrument's response function from a gamma-astro-data-fits-file and estimates the instrument's differential sensitivity"
+    ),
 )
 
 parser.add_argument(
@@ -19,10 +21,7 @@ parser.add_argument(
     help="gamma-astro-data-fits-file containing the instrument's response function.",
 )
 parser.add_argument(
-    "out_dir",
-    metavar="OUT_DIR",
-    type=str,
-    help="writes the output here.",
+    "out_dir", metavar="OUT_DIR", type=str, help="writes the output here.",
 )
 
 parser.add_argument(
@@ -87,14 +86,14 @@ CONFIG["num_bins_per_decade"] = args.num_bins_per_decade
 CONFIG["roi_opening_deg"] = args.roi_opening_deg
 CONFIG["detection_threshold_std"] = args.detection_threshold_std
 CONFIG["estimator_statistics"] = args.estimator_statistics
-CONFIG["systematic_uncertainty_relative"] = args.systematic_uncertainty_relative
+CONFIG[
+    "systematic_uncertainty_relative"
+] = args.systematic_uncertainty_relative
 CONFIG["observation_time_s"] = args.observation_time_s
 CONFIG["on_over_off_ratio"] = args.on_over_off_ratio
 
 
-irf = fs.io.gamma_astro_data.read_instrument_response_function(
-    path=irf_path
-)
+irf = fs.io.gamma_astro_data.read_instrument_response_function(path=irf_path)
 
 irf = fs.io.gamma_astro_data.average_instrument_response_over_field_of_view(
     irf=irf, roi_opening_deg=CONFIG["roi_opening_deg"]
@@ -138,7 +137,9 @@ background_rate_onregion_per_s = fs.io.gamma_astro_data.integrate_background_rat
     point_spread_function_sigma_deg=point_spread_function_sigma_deg,
     energy_bin_edges_GeV=energy_bin_edges_GeV,
 )
-background_rate_onregion_per_s_au = np.zeros(background_rate_onregion_per_s.shape)
+background_rate_onregion_per_s_au = np.zeros(
+    background_rate_onregion_per_s.shape
+)
 
 
 os.makedirs(out_dir, exist_ok=True)
@@ -191,12 +192,17 @@ for scenario_key in fs.differential.SCENARIOS:
         background_rate_onregion_in_scenario_per_s_au=background_rate_onregion_in_scenario_per_s_au,
         onregion_over_offregion_ratio=CONFIG["on_over_off_ratio"],
         observation_time_s=CONFIG["observation_time_s"],
-        instrument_systematic_uncertainty_relative=CONFIG["systematic_uncertainty_relative"],
+        instrument_systematic_uncertainty_relative=CONFIG[
+            "systematic_uncertainty_relative"
+        ],
         detection_threshold_std=CONFIG["detection_threshold_std"],
         estimator_statistics=CONFIG["estimator_statistics"],
     )
 
-    (dVdE_per_m2_per_GeV_per_s, dVdE_per_m2_per_GeV_per_s_au,) = fs.differential.estimate_differential_sensitivity(
+    (
+        dVdE_per_m2_per_GeV_per_s,
+        dVdE_per_m2_per_GeV_per_s_au,
+    ) = fs.differential.estimate_differential_sensitivity(
         energy_bin_edges_GeV=energy_bin_edges_GeV,
         signal_area_in_scenario_m2=signal_area_in_scenario_m2,
         signal_area_in_scenario_m2_au=signal_area_in_scenario_m2_au,
@@ -210,8 +216,12 @@ for scenario_key in fs.differential.SCENARIOS:
     out["signal_area_in_scenario_m2"] = signal_area_in_scenario_m2
     out["signal_area_in_scenario_m2_au"] = signal_area_in_scenario_m2_au
 
-    out["background_rate_onregion_in_scenario_per_s"] = background_rate_onregion_in_scenario_per_s
-    out["background_rate_onregion_in_scenario_per_s_au"] = background_rate_onregion_in_scenario_per_s_au
+    out[
+        "background_rate_onregion_in_scenario_per_s"
+    ] = background_rate_onregion_in_scenario_per_s
+    out[
+        "background_rate_onregion_in_scenario_per_s_au"
+    ] = background_rate_onregion_in_scenario_per_s_au
 
     out["dVdE_per_m2_per_GeV_per_s"] = dVdE_per_m2_per_GeV_per_s
     out["dVdE_per_m2_per_GeV_per_s_au"] = dVdE_per_m2_per_GeV_per_s_au

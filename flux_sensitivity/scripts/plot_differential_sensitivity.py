@@ -12,8 +12,7 @@ import binning_utils
 import cosmic_fluxes
 
 parser = argparse.ArgumentParser(
-    prog="plot_differential_sensitivity",
-    description=("Make plots"),
+    prog="plot_differential_sensitivity", description=("Make plots"),
 )
 parser.add_argument(
     "input_dir",
@@ -84,7 +83,9 @@ for dk in flux_sensitivity.differential.SCENARIOS:
     ax.set_ylim([1e-5, 1e5])
     ax.loglog()
     fig.savefig(
-        os.path.join(out_dir, "background_rate_in_scenario_{:s}.jpg".format(dk))
+        os.path.join(
+            out_dir, "background_rate_in_scenario_{:s}.jpg".format(dk)
+        )
     )
     seb.close(fig)
 
@@ -97,20 +98,29 @@ for dk in flux_sensitivity.differential.SCENARIOS:
         linestyle="-",
         linecolor="k",
         linealpha=1.0,
-        bincounts_upper=SCENARIO["signal_area_in_scenario_m2"] + SCENARIO["signal_area_in_scenario_m2_au"],
-        bincounts_lower=SCENARIO["signal_area_in_scenario_m2"] - SCENARIO["signal_area_in_scenario_m2_au"],
+        bincounts_upper=SCENARIO["signal_area_in_scenario_m2"]
+        + SCENARIO["signal_area_in_scenario_m2_au"],
+        bincounts_lower=SCENARIO["signal_area_in_scenario_m2"]
+        - SCENARIO["signal_area_in_scenario_m2_au"],
         face_color="k",
         face_alpha=0.2,
         label="Reco. energy, according to G-matrix for this scenario",
         draw_bin_walls=False,
     )
-    ax.plot(energy_bin["centers"], IRF["signal_area_m2"], "+k", label="True energy.")
+    ax.plot(
+        energy_bin["centers"],
+        IRF["signal_area_m2"],
+        "+k",
+        label="True energy.",
+    )
     ax.set_ylabel("area / m$^{2}$")
     ax.set_xlabel(elabel + "energy / GeV")
     ax.set_ylim([1e0, 1e7])
     ax.loglog()
     ax.legend(loc="best", fontsize=6)
-    fig.savefig(os.path.join(out_dir, "signal_area_in_scenario_{:s}.jpg".format(dk)))
+    fig.savefig(
+        os.path.join(out_dir, "signal_area_in_scenario_{:s}.jpg".format(dk))
+    )
     seb.close(fig)
 
     # G_matrix
@@ -134,7 +144,9 @@ for dk in flux_sensitivity.differential.SCENARIOS:
     ax_c.set_ylabel("reco. energy / GeV")
     ax_c.loglog()
     ax_c.set_xlabel("energy / GeV")
-    fig.savefig(os.path.join(out_dir, "G_matrix_in_scenario_{:s}.jpg".format(dk)))
+    fig.savefig(
+        os.path.join(out_dir, "G_matrix_in_scenario_{:s}.jpg".format(dk))
+    )
     seb.close(fig)
 
     # B_matrix
@@ -158,12 +170,10 @@ for dk in flux_sensitivity.differential.SCENARIOS:
     ax_c.set_ylabel("reco. energy / GeV")
     ax_c.loglog()
     ax_c.set_xlabel("energy / GeV")
-    fig.savefig(os.path.join(out_dir, "B_matrix_in_scenario_{:s}.jpg".format(dk)))
+    fig.savefig(
+        os.path.join(out_dir, "B_matrix_in_scenario_{:s}.jpg".format(dk))
+    )
     seb.close(fig)
-
-
-
-
 
     components = []
 
@@ -174,8 +184,7 @@ for dk in flux_sensitivity.differential.SCENARIOS:
         scale_factor = np.power(10.0, (-1) * i)
         com["energy"] = [np.array(crab_flux["energy"]["values"])]
         com["differential_flux"] = [
-            scale_factor
-            * np.array(crab_flux["differential_flux"]["values"])
+            scale_factor * np.array(crab_flux["differential_flux"]["values"])
         ]
         com[
             "label"
@@ -201,9 +210,7 @@ for dk in flux_sensitivity.differential.SCENARIOS:
 
     # CTA South 1800s
     # ---------------
-    cta_diff = cta.differential_sensitivity(
-        observation_time=observation_time
-    )
+    cta_diff = cta.differential_sensitivity(observation_time=observation_time)
     com = {}
     com["energy"] = [np.array(cta_diff["energy"]["values"])]
     com["differential_flux"] = [
@@ -230,9 +237,7 @@ for dk in flux_sensitivity.differential.SCENARIOS:
         com["differential_flux"].append([_dFdE_sens, _dFdE_sens])
 
         _dFdE_sens_au = SCENARIO["dVdE_per_m2_per_GeV_per_s_au"][ii]
-        com["differential_flux_au"].append(
-            [_dFdE_sens_au, _dFdE_sens_au]
-        )
+        com["differential_flux_au"].append([_dFdE_sens_au, _dFdE_sens_au])
 
     com["label"] = CONFIG["name"]
     com["color"] = "black"
@@ -244,7 +249,6 @@ for dk in flux_sensitivity.differential.SCENARIOS:
         sed_style = SED_STYLES[sedk]
         sed_style_dirname = "sed_style_" + sedk
         os.makedirs(os.path.join(out_dir, sed_style_dirname), exist_ok=True)
-
 
         fig = seb.figure(plenoirf.summary.figure.FIGURE_STYLE)
         ax = seb.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
@@ -303,15 +307,9 @@ for dk in flux_sensitivity.differential.SCENARIOS:
             "energy_axes_label"
         ]
         ax.set_xlabel(
-            etype
-            + " "
-            + sed_style["x_label"]
-            + " /"
-            + sed_style["x_unit"]
+            etype + " " + sed_style["x_label"] + " /" + sed_style["x_unit"]
         )
-        ax.set_ylabel(
-            sed_style["y_label"] + " /\n " + sed_style["y_unit"]
-        )
+        ax.set_ylabel(sed_style["y_label"] + " /\n " + sed_style["y_unit"])
         fig.savefig(
             os.path.join(
                 out_dir,
