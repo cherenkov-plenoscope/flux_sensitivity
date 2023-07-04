@@ -7,7 +7,7 @@ import os
 import sebastians_matplotlib_addons as seb
 import spectral_energy_distribution_units as sed
 from plenoirf.analysis import spectral_energy_distribution as sed_styles
-import json_numpy
+import json_utils
 import binning_utils
 import cosmic_fluxes
 
@@ -23,7 +23,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-AA = json_numpy.read_tree(args.input_dir)
+AA = json_utils.tree.read(args.input_dir)
 out_dir = os.path.join(args.input_dir, "plot")
 os.makedirs(out_dir, exist_ok=True)
 

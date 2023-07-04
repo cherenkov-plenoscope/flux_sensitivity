@@ -3,7 +3,7 @@ import argparse
 import flux_sensitivity as fs
 import binning_utils
 import os
-import json_numpy
+import json_utils
 import numpy as np
 
 
@@ -151,8 +151,8 @@ blk["signal_area_m2"] = signal_area_m2
 blk["signal_area_m2_au"] = signal_area_m2_au
 blk["background_rate_onregion_per_s"] = background_rate_onregion_per_s
 blk["background_rate_onregion_per_s_au"] = background_rate_onregion_per_s_au
-json_numpy.write(os.path.join(out_dir, "irf.json"), blk)
-json_numpy.write(os.path.join(out_dir, "config.json"), CONFIG)
+json_utils.write(os.path.join(out_dir, "irf.json"), blk)
+json_utils.write(os.path.join(out_dir, "config.json"), CONFIG)
 
 scenario_dir = os.path.join(out_dir, "scenarios")
 os.makedirs(scenario_dir, exist_ok=True)
@@ -227,4 +227,4 @@ for scenario_key in fs.differential.SCENARIOS:
     out["dVdE_per_m2_per_GeV_per_s_au"] = dVdE_per_m2_per_GeV_per_s_au
 
     path = os.path.join(scenario_dir, "{:s}.json".format(scenario_key))
-    json_numpy.write(path, out)
+    json_utils.write(path, out)
