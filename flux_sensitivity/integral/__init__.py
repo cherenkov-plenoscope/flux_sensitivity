@@ -1,6 +1,6 @@
 import numpy as np
 import binning_utils
-from . import critical_rate
+from .. import critical_rate
 
 
 def power_law_spectrum(energy, flux_density, spectral_index, pivot_energy):
