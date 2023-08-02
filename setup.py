@@ -4,9 +4,17 @@ import os
 with open("README.rst", "r", encoding="utf-8") as f:
     long_description = f.read()
 
+
+with open(os.path.join("flux_sensitivity", "version.py")) as f:
+    txt = f.read()
+    last_line = txt.splitlines()[-1]
+    version_string = last_line.split()[-1]
+    version = version_string.strip("\"'")
+
+
 setuptools.setup(
     name="flux_sensitivity_sebastian-achim-mueller",
-    version="0.0.2",
+    version=version,
     description=(
         "Estimate the flux-sensitivity of a point-source either integral "
         "or differential w.r.t. energy."
