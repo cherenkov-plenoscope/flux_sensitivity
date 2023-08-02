@@ -35,6 +35,7 @@ setuptools.setup(
         "flux_sensitivity.io",
         "flux_sensitivity.integral",
         "flux_sensitivity.differential",
+        "flux_sensitivity.differential.scenarios",
     ],
     package_data={
         "flux_sensitivity": [os.path.join("tests", "resources", "*")]
