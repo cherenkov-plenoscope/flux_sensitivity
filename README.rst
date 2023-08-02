@@ -1,6 +1,6 @@
 Flux-Sensitivity
 ================
-|BlackStyle|
+|BlackStyle| |CiStatus|
 
 You have an instrument that is looking for the photons coming from point like sources?
 Your instrument can estimate the energy of the photons?
@@ -10,3 +10,6 @@ This tool estimates how much flux photons must be present at your instrument in 
 
 .. |BlackStyle| image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
+
+.. |CiStatus| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/actions/workflows/test.yml/badge.svg?branch=main
+   :target: https://github.com/cherenkov-plenoscope/flux_sensitivity/actions/workflows/test.yml
