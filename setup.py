@@ -38,7 +38,10 @@ setuptools.setup(
         "flux_sensitivity.differential.scenarios",
     ],
     package_data={
-        "flux_sensitivity": [os.path.join("tests", "resources", "*")]
+        "flux_sensitivity": [
+            os.path.join("tests", "resources", "cta", "*"),
+            os.path.join("tests", "resources", "portal", "*"),
+        ]
     },
     install_requires=[
         "binning_utils_sebastian-achim-mueller>=0.0.5",
