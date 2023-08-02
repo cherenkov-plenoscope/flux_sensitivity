@@ -30,7 +30,12 @@ setuptools.setup(
     },
     author="Sebastian Achim Mueller",
     author_email="sebastian-achim.mueller@mpi-hd.mpg.de",
-    packages=["flux_sensitivity",],
+    packages=[
+        "flux_sensitivity",
+        "flux_sensitivity.io",
+        "flux_sensitivity.integral",
+        "flux_sensitivity.differential",
+    ],
     package_data={
         "flux_sensitivity": [os.path.join("tests", "resources", "*")]
     },
