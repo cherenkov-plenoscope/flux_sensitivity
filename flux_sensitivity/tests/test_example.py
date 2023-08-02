@@ -13,7 +13,9 @@ RESOURCE_DIR = pkg_resources.resource_filename(
 
 
 def read_csv(fname):
-    arr = pandas.read_csv(os.path.join(RESOURCE_DIR, fname)).to_numpy()
+    arr = pandas.read_csv(
+        os.path.join(RESOURCE_DIR, "portal", fname)
+    ).to_numpy()
     if len(arr.shape) == 2:
         if arr.shape[1] == 1:
             arr = arr.reshape((arr.shape[0],))
@@ -30,8 +32,9 @@ Q_m2_sr_au = {}
 for pk in ["proton", "electron", "helium"]:
     Q_m2_sr[pk] = read_csv("effective_acceptance_{:s}_m2_sr.csv".format(pk))
     Q_m2_sr_au[pk] = read_csv(
-        "effective_acceptance_{:s}_m2_sr_absolute_uncertainty.csv".format(pk)
+        "effective_acceptance_{:s}_m2_sr_absolute_uncertainty.csv".format(pk),
     )
+
 
 M = {}
 M_au = {}
@@ -39,18 +42,20 @@ for pk in ["gamma", "proton", "electron", "helium"]:
     M[pk] = read_csv(
         "energy_conditional_probability_reco_given_true_ax0true_ax1reco_{:s}.csv".format(
             pk
-        )
+        ),
     )
+
     M_au[pk] = read_csv(
         "energy_conditional_probability_reco_given_true_ax0true_ax1reco_{:s}_au.csv".format(
             pk
-        )
+        ),
     )
+
 
 dFdE_per_m2_per_sr_per_GeV_per_s = {}
 for pk in ["proton", "electron", "helium"]:
     dFdE_per_m2_per_sr_per_GeV_per_s[pk] = read_csv(
-        "differential_flux_{:s}_per_m2_per_sr_per_GeV_per_s.csv".format(pk)
+        "differential_flux_{:s}_per_m2_per_sr_per_GeV_per_s.csv".format(pk),
     )
 
 
