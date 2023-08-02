@@ -1,4 +1,3 @@
-import numpy as np
 import lima1983analysis
 import propagate_uncertainties as pru
 

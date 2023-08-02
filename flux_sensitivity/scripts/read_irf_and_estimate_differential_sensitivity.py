@@ -10,7 +10,9 @@ import numpy as np
 parser = argparse.ArgumentParser(
     prog="estimate_differential_sensitivity",
     description=(
-        "Reads an instrument's response function from a gamma-astro-data-fits-file and estimates the instrument's differential sensitivity"
+        "Reads an instrument's response function from a "
+        "gamma-astro-data-fits-file and estimates the instrument's "
+        "differential sensitivity"
     ),
 )
 
@@ -18,7 +20,10 @@ parser.add_argument(
     "irf_file",
     metavar="IRF_PATH",
     type=str,
-    help="gamma-astro-data-fits-file containing the instrument's response function.",
+    help=(
+        "gamma-astro-data-fits-file containing the instrument's "
+        "response function."
+    ),
 )
 parser.add_argument(
     "out_dir", metavar="OUT_DIR", type=str, help="writes the output here.",
@@ -42,7 +47,10 @@ parser.add_argument(
     "--detection_threshold_std",
     metavar="STDDEV",
     type=float,
-    help="Standard-deviation a signal has to reach above the background's noise.",
+    help=(
+        "Standard-deviation a signal has to reach above "
+        "the background's noise."
+    ),
     default=5.0,
 )
 parser.add_argument(
@@ -70,7 +78,10 @@ parser.add_argument(
     "--estimator_statistics",
     metavar="METHOD",
     type=str,
-    help="The name of the estimator for the statistics. ['sqrt', 'LiMaEq9', 'LiMaEq17']",
+    help=(
+        "The name of the estimator for the statistics. "
+        "['sqrt', 'LiMaEq9', 'LiMaEq17']"
+    ),
     default="LiMaEq17",
 )
 

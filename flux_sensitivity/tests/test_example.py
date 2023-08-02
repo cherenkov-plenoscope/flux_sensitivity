@@ -1,6 +1,5 @@
 import flux_sensitivity
 import pkg_resources
-import glob
 import os
 import pandas
 import astropy

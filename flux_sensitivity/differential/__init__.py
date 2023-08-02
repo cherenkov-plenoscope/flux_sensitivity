@@ -1,5 +1,4 @@
 import numpy as np
-import os
 import propagate_uncertainties as pru
 import binning_utils
 from .. import critical_rate
