@@ -7,12 +7,18 @@ with open("README.rst", "r", encoding="utf-8") as f:
 setuptools.setup(
     name="flux_sensitivity_sebastian-achim-mueller",
     version="0.0.2",
-    description="Estimate the flux-sensitivity of a point-source (integral or differential w.r.t. energy).",
+    description=(
+        "Estimate the flux-sensitivity of a point-source either integral "
+        "or differential w.r.t. energy."
+    ),
     long_description=long_description,
     long_description_content_type="text/x-rst",
     url="https://github.com/cherenkov-plenoscope/flux_sensitivity",
     project_urls={
-        "Bug Tracker": "https://github.com/cherenkov-plenoscope/flux_sensitivity/issues",
+        "Bug Tracker": (
+            "https://github.com/cherenkov-plenoscope/"
+            "flux_sensitivity/issues"
+        ),
     },
     author="Sebastian Achim Mueller",
     author_email="sebastian-achim.mueller@mpi-hd.mpg.de",
