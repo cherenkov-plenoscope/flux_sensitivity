@@ -42,6 +42,7 @@ setuptools.setup(
     install_requires=[
         "binning_utils_sebastian-achim-mueller>=0.0.5",
         "propagate_uncertainties_sebastian-achim-mueller>=0.2.2",
+        "lima1983analysis_sebastian-achim-mueller",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
