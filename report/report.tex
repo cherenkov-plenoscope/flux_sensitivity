@@ -37,15 +37,13 @@
     \subsection*{Abstract}
         The 'differential sensitivity' is a common measure for an instrument's performance in the atmospheric Cherenkov-method.
         %
+        An instrument's differential sensitivity describes how strong the flux of gamma-rays from a certain direction and at a certain energy needs to be in order for the instrument to claim a detection within a certain time.
+        %
         However, when the instrument's reconstruction of energy is not perfect there exist multiple reasonable approaches to estimate differential sensitivity.
         %
         All these approaches differ in how they respect the non perfect reconstruction of energy.
         %
-        When first estimating a differential sensitivity myself, I realized that there exist slightly different flavours in the atmospheric Cherenkov-method.
-        %
-        As the resulting estimates for the differential sensitivity differ, we have to ask ourselves what exactly are the different astronomical questions being answered by these estimates.
-        %
-        Here I list and explore these different astronomical questions.
+        Although a non perfect reconstruction of the gamma-rays energies is clearly related to the instrument, some of the approaches to deal with this shortcoming can be interpreted as assuming slightly different astronomical scenarios for the source's spectrum in energy.
         %
     \section{Observables, Background and the On-Off-Measurement}
         \label{SecObservablesAndOnOff}
@@ -102,7 +100,7 @@
             E[e] &=& [e_1, e_2, \cdots, e_{N+1}]\\
             \text{unit} &:& \text{energy} / \text{GeV}\\
             \text{shape} &:& \text{list of}\,\,(N + 1)\,\,\text{floats}\\
-            \text{code} &:& \verb|energy_bin_edges_GeV|
+            %\text{code} &:& \verb|energy_bin_edges_GeV|
         \end{eqnarray*}
         %
         and denote the width of the bins as
@@ -112,7 +110,7 @@
             &=& [e_2-e_1, e_3-e_2, \cdots, e_{N+1}-e_N]\\
             \text{unit} &:& \text{energy} / \text{GeV}\\
             \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-            \text{code} &:& \verb|energy_bin_width_GeV|
+            %\text{code} &:& \verb|energy_bin_width_GeV|
         \end{eqnarray*}
         %
         I will represent all the following quantities as discrete vectors or matrices.
@@ -134,7 +132,7 @@
                 \dd{V_\gamma}{E}[e] &=& [dv_1, \, dv_2, \, \cdots, \, dv_N]\\
                 \text{unit} &:& \text{area}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                \text{code} &:& \verb|dVdE|
+                %\text{code} &:& \verb|dVdE|
             \end{eqnarray*}
             %
             in order to claim a detection.
@@ -151,7 +149,7 @@
                 T_\text{obs} && \\
                 \text{unit} &:& \text{time} / s\\
                 \text{shape} &:& \text{float}\\
-                \text{code} &:& \verb|observation_time_s|
+                %\text{code} &:& \verb|observation_time_s|
             \end{eqnarray*}
             %
             The observation-time $T_\text{obs}$ is the accumulated duration our instrument was ready to trigger and record an event.
@@ -181,7 +179,7 @@
                 \dd{F_p}{E}[e] &=& [df_{p1}, df_{p2}, \cdots, df_{pN}]\\
                 \text{unit} &:& \text{area}^{-1} \text{(solid angle)}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\, \text{sr}^{-1}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                \text{code} &:& \verb|differential_flux_per_m2_per_sr_per_s_per_GeV|
+                %\text{code} &:& \verb|differential_flux_per_m2_per_sr_per_s_per_GeV|
             \end{eqnarray*}
             %
             The diffuse, differential flux for every cosmic-ray $p$ in $\mathbb{P}_\text{background}$. This might be taken from measurements of space-born instruments e.g. \cite{aguilar2014precision,aguilar2015precision}.
@@ -195,7 +193,7 @@
                 Q_p[e] &=& [q_{p1}, q_{p2}, \cdots, q_{pN}]\\
                 \text{unit} &:& \text{area} \, \text{(solid angle)} / \text{m}^{2}\,\text{sr}\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                \text{code} &:& \verb|acceptance_m2_sr|
+                %\text{code} &:& \verb|acceptance_m2_sr|
             \end{eqnarray*}
             %
             The effective acceptance of our instrument to detect an air-shower induced by cosmic-ray $p$ with true energy $E$ that was falsely classified to be a gamma-ray.
@@ -207,7 +205,7 @@
                 A_\gamma[e] &=& [a_{\gamma 1}, a_{\gamma 2}, \cdots, a_{\gamma N}]\\
                 \text{unit} &:& \text{area} / \text{m}^{2}\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                \text{code} &:& \verb|signal_area_m2|
+                %\text{code} &:& \verb|signal_area_m2|
             \end{eqnarray*}
             %
             The effective area of our instrument to detect a gamma-ray with true energy $E$ which the instrument positively classifies to be a gamma-ray.
@@ -228,7 +226,7 @@
                   \end{array} } \right]\\
                 \text{unit} &:& \text{probability}/1\\
                 \text{shape} &:& \text{matrix of}\,\,N \times N \,\,\text{floats}\\
-                \text{code} &:& \verb|energy_reco_given_true_ax0true_ax1reco|
+                %\text{code} &:& \verb|energy_reco_given_true_ax0true_ax1reco|
             \end{eqnarray*}
             %
             to reconstruct cosmic particle $p$ to have reconstructed energy $E'$ given the particle has true energy $E$.
@@ -251,7 +249,7 @@
                 N_S[e'] &=& C(\hat{N}_B[e'],\,\,S,\,\,\dots)\\
                 \text{unit} &:& \text{intensity}/1\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                \text{code} &:& \verb|critical_signal_counts_1|
+                %\text{code} &:& \verb|critical_signal_counts_1|
             \end{eqnarray*}
             %
             which is required to claim a detection.
