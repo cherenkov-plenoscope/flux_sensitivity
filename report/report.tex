@@ -100,10 +100,10 @@
             It assumes that the gamma-rays are coming from point like source (are parallel).
             %
         \subsection{Input from Instrument}
-            \subsubsection*{The Set of Contributions to the Background}
+            \subsubsection*{The Set of relevant Cosmic-Rays (Background)}
                 %
                 \begin{eqnarray*}
-                    \mathbb{P}_\text{background} &=& \{
+                    \mathbb{B} &=& \{
                     {_1^1}\text{H},\,\,
                     {_2^4}\text{He},\,\,
                     \text{e}^{+},\,\,
@@ -112,7 +112,7 @@
                     \}
                 \end{eqnarray*}
                 %
-                The relevant contributions to the background are the cosmic-rays.
+                The instrument must list the cosmic-rays which contribute to its background in a relevant way.
                 %
             \subsubsection*{Effective Acceptance for Cosmic-Rays (Background) After All Cuts}
                 \begin{eqnarray*}
@@ -122,9 +122,9 @@
                     %\text{code} &:& \verb|acceptance_m2_sr|
                 \end{eqnarray*}
                 %
-                The effective acceptance of our instrument to detect an air-shower induced by cosmic-ray $p$ with true energy $E$ that was falsely classified to be a gamma-ray.
+                The effective acceptance of our instrument to detect an air-shower induced by cosmic-ray $p$ in $\mathbb{B}$ with true energy $E$ that was falsely classified to be a gamma-ray.
                 %
-                Acceptance, the product of area and solid angle, is also called etendue.
+                Acceptance (also called etendue) is the product of area and solid angle.
                 %
             \subsubsection*{Effective Area for Gamma-Rays (Signal) After All Cuts}
                 \begin{eqnarray*}
@@ -157,7 +157,7 @@
                 %
                 to reconstruct cosmic particle $p$ to have reconstructed energy $E'$ given the particle has true energy $E$.
                 %
-                We need this for every particle $p$ in $\gamma \cup P_\text{background}$.
+                We need this for every particle $p$ in $\gamma \cup \mathbb{B}$.
                 %
                 Here only events which are classified to be gamma-rays contribute, i.e. same cuts as in $Q_p$ and $A_\gamma$.
                 %
@@ -178,7 +178,7 @@
                     %\text{code} &:& \verb|differential_flux_per_m2_per_sr_per_s_per_GeV|
                 \end{eqnarray*}
                 %
-                The diffuse, differential flux for every cosmic-ray $p$ in $\mathbb{P}_\text{background}$.
+                The diffuse, differential flux for every cosmic-ray $p$ in $\mathbb{B}$.
                 %
                 More precisely: For Cherenkov-instruments observing at energies at and below the geomagnetic cutoff this is not the flux of cosmic particles, but the flux of air-showers induced by these particle and includes e.g. the flux of air-showers induced by terrestrial, 'secondary' particles \cite{lipari2002fluxes}.
                 %
@@ -288,7 +288,7 @@
                 %
                 The effective area for gamma-rays $A^k_\gamma[e']$ depends on the scenario $k$.
                 %
-    \section{Representing and Applying different Scenarios}
+    \section{Representing different Scenarios}
         %
         So far I encountered four scenarios which answer different astronomical questions.
         %
