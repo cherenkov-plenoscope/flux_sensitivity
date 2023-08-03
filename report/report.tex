@@ -269,10 +269,12 @@
             \subsubsection*{2) Computing the number of required signal-counts $N_S[e']$}
                 %
                 We estimate the required number of signal-counts
+                %
                 \begin{eqnarray}
-                    N_S[e'] &=& C^k(\hat{N}_B[e'],\,\,S,\,\,\dots)
+                    N_S[e'] &=& C(\hat{N}_B[e'],\,\,S,\,\,\dots)
                 \end{eqnarray}
-                in each energy-bin $e'$. As discussed before, the algorithm $C^k$ might depend on the scenario $k$.
+                %
+                in each energy-bin $e'$.
                 %
             \subsubsection*{3) Computing the flux $\dd{V}{E}[e']$}
                 %
@@ -317,8 +319,6 @@
             \text{quantity}/\text{unit} &:& \text{weights for background}/1\\
             \text{shape} &:& \text{matrix of}\,\,n \times n \,\,\text{floats}.
         \end{eqnarray*}
-        %
-        Here, I use the same algorithm $C$ to compute the minimal number of signal-counts for all scenarios, so the differences discussed here are only in $G$ and $B$.
         %
         \subsection{Applying a Scenario $k$}
             %
