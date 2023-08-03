@@ -98,7 +98,7 @@
         %
         \begin{eqnarray*}
             E[e] &=& [e_1, e_2, \cdots, e_{N+1}]\\
-            \text{unit} &:& \text{energy} / \text{GeV}\\
+            \text{quantity}/\text{unit} &:& \text{energy} / \text{GeV}\\
             \text{shape} &:& \text{list of}\,\,(N + 1)\,\,\text{floats}\\
             %\text{code} &:& \verb|energy_bin_edges_GeV|
         \end{eqnarray*}
@@ -108,7 +108,7 @@
         \begin{eqnarray*}
             \text{d}E[e] &=& E[e+1] - E[e]\\
             &=& [e_2-e_1, e_3-e_2, \cdots, e_{N+1}-e_N]\\
-            \text{unit} &:& \text{energy} / \text{GeV}\\
+            \text{quantity}/\text{unit} &:& \text{energy} / \text{GeV}\\
             \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
             %\text{code} &:& \verb|energy_bin_width_GeV|
         \end{eqnarray*}
@@ -130,7 +130,7 @@
             %
             \begin{eqnarray*}
                 \dd{V_\gamma}{E}[e] &=& [dv_1, \, dv_2, \, \cdots, \, dv_N]\\
-                \text{unit} &:& \text{area}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
+                \text{quantity}/\text{unit} &:& \text{area}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
                 %\text{code} &:& \verb|dVdE|
             \end{eqnarray*}
@@ -147,7 +147,7 @@
             %
             \begin{eqnarray*}
                 T_\text{obs} && \\
-                \text{unit} &:& \text{time} / s\\
+                \text{quantity}/\text{unit} &:& \text{time} / s\\
                 \text{shape} &:& \text{float}\\
                 %\text{code} &:& \verb|observation_time_s|
             \end{eqnarray*}
@@ -177,7 +177,7 @@
             %
             \begin{eqnarray*}
                 \dd{F_p}{E}[e] &=& [df_{p1}, df_{p2}, \cdots, df_{pN}]\\
-                \text{unit} &:& \text{area}^{-1} \text{(solid angle)}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\, \text{sr}^{-1}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
+                \text{quantity}/\text{unit} &:& \text{area}^{-1} \text{(solid angle)}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\, \text{sr}^{-1}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
                 %\text{code} &:& \verb|differential_flux_per_m2_per_sr_per_s_per_GeV|
             \end{eqnarray*}
@@ -191,7 +191,7 @@
         \subsubsection*{Effective Acceptance for Cosmic-Rays (Background) After All Cuts}
             \begin{eqnarray*}
                 Q_p[e] &=& [q_{p1}, q_{p2}, \cdots, q_{pN}]\\
-                \text{unit} &:& \text{area} \, \text{(solid angle)} / \text{m}^{2}\,\text{sr}\\
+                \text{quantity}/\text{unit} &:& \text{area} \, \text{(solid angle)} / \text{m}^{2}\,\text{sr}\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
                 %\text{code} &:& \verb|acceptance_m2_sr|
             \end{eqnarray*}
@@ -203,7 +203,7 @@
         \subsubsection*{Effective Area for Gamma-Rays (Signal) After All Cuts}
             \begin{eqnarray*}
                 A_\gamma[e] &=& [a_{\gamma 1}, a_{\gamma 2}, \cdots, a_{\gamma N}]\\
-                \text{unit} &:& \text{area} / \text{m}^{2}\\
+                \text{quantity}/\text{unit} &:& \text{area} / \text{m}^{2}\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
                 %\text{code} &:& \verb|signal_area_m2|
             \end{eqnarray*}
@@ -224,7 +224,7 @@
                     \vdots & \ddots & \vdots\\
                     m_{N1} & \cdots & m_{NN}\\
                   \end{array} } \right]\\
-                \text{unit} &:& \text{probability}/1\\
+                \text{quantity}/\text{unit} &:& \text{probability}/1\\
                 \text{shape} &:& \text{matrix of}\,\,N \times N \,\,\text{floats}\\
                 %\text{code} &:& \verb|energy_reco_given_true_ax0true_ax1reco|
             \end{eqnarray*}
@@ -247,7 +247,7 @@
             %
             \begin{eqnarray*}
                 N_S[e'] &=& C(\hat{N}_B[e'],\,\,S,\,\,\dots)\\
-                \text{unit} &:& \text{intensity}/1\\
+                \text{quantity}/\text{unit} &:& \text{intensity}/1\\
                 \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
                 %\text{code} &:& \verb|critical_signal_counts_1|
             \end{eqnarray*}
@@ -341,7 +341,7 @@
                 \vdots & \ddots & \vdots\\
                 g_{n1} & \cdots & g_{nn}\\
               \end{array} } \right]\\
-            \text{unit} &:& \text{weights for signal}/1\\
+            \text{quantity}/\text{unit} &:& \text{weights for signal}/1\\
             \text{shape} &:& \text{matrix of}\,\,n \times n \,\,\text{floats},
         \end{eqnarray*}
         %
@@ -354,7 +354,7 @@
                 \vdots & \ddots & \vdots\\
                 b_{n1} & \cdots & b_{nn}\\
               \end{array} } \right]\\
-            \text{unit} &:& \text{weights for background}/1\\
+            \text{quantity}/\text{unit} &:& \text{weights for background}/1\\
             \text{shape} &:& \text{matrix of}\,\,n \times n \,\,\text{floats}.
         \end{eqnarray*}
         %
