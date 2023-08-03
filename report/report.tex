@@ -60,27 +60,6 @@
         %
         The on-region is part in the space of observables ($(\Theta', \phi'), E', t'$) where we expect significantly more gamma-rays (signal) than in the remaining off-region.
         %
-    \section{A brief detour into reality}
-        %
-        In practice, we use $N$ bins in energy defined by $(N+1)$ edges
-        %
-        \begin{eqnarray*}
-            E[e] &=& [e_1, e_2, \cdots, e_{N+1}]\\
-            \text{quantity}/\text{unit} &:& \text{energy} / \text{GeV}\\
-            \text{shape} &:& \text{list of}\,\,(N + 1)\,\,\text{floats}\\
-            %\text{code} &:& \verb|energy_bin_edges_GeV|
-        \end{eqnarray*}
-        %
-        and denote the width of the bins as
-        %
-        \begin{eqnarray*}
-            \text{d}E[e] &=& E[e+1] - E[e]
-        \end{eqnarray*}
-        %
-        I will represent all the following quantities as discrete vectors or matrices.
-        %
-        I can not effort the mental mapping from infinitesimal representations to the actual implementation in the code.
-        %
     \section{Common Ground}
         \label{SecCommonGround}
         %
@@ -88,9 +67,26 @@
         %
         \subsection{Output}
             %
-            Let's start with the common output of differential sensitivity in the atmospheric Cherenkov-method.
+            Let's start with the output.
             %
-            This is the minimal required parallel flux of gamma-rays
+            Differential sensitivity is differential with respect to the gamma-rays energies.
+            %
+            In practice, we use $N$ bins in energy defined by $(N+1)$ edges
+            %
+            \begin{eqnarray*}
+                E[e] &=& [e_1, e_2, \cdots, e_{N+1}]\\
+                \text{quantity}/\text{unit} &:& \text{energy} / \text{GeV}\\
+                \text{shape} &:& \text{list of}\,\,(N + 1)\,\,\text{floats}\\
+                %\text{code} &:& \verb|energy_bin_edges_GeV|
+            \end{eqnarray*}
+            %
+            and denote the width of the bins as
+            %
+            \begin{eqnarray*}
+                \text{d}E[e] &=& E[e+1] - E[e]
+            \end{eqnarray*}
+            %
+            Now for each bin $e$ in energy, the differential sensitivity gives the minimal flux of gamma-rays (divided by the width of the bin in energy d$E$)
             %
             \begin{eqnarray*}
                 \dd{V_\gamma}{E}[e] &=& [dv_1, \, dv_2, \, \cdots, \, dv_N]\\
@@ -99,147 +95,150 @@
                 %\text{code} &:& \verb|dVdE|
             \end{eqnarray*}
             %
-            in order to claim a detection.
+            which is required for the instrument in order to claim a detection.
             %
-            The property of the flux being parallel is about what the flux of a point-source looks like to a far distant observer.
+            It assumes that the gamma-rays are coming from point like source (are parallel).
             %
-        \subsection{Input}
-            %
-            On the input side we got some room for different scenarios.
-            %
-        \subsubsection*{Observation-Time}
-            %
-            \begin{eqnarray*}
-                T_\text{obs} && \\
-                \text{quantity}/\text{unit} &:& \text{time} / s\\
-                \text{shape} &:& \text{float}\\
-                %\text{code} &:& \verb|observation_time_s|
-            \end{eqnarray*}
-            %
-            The observation-time $T_\text{obs}$ is the accumulated duration our instrument was ready to trigger and record an event.
-            %
-            Commonly, Cherenkov-telescopes show $T_\text{obs} = 50\,$h or $T_\text{obs} = 1800\,$s. for todays quickest transients.
-            %
-        \subsubsection*{The Set of Contributions to the Background}
-            %
-            \begin{eqnarray*}
-                \mathbb{P}_\text{background} &=& \{
-                {_1^1}\text{H},\,\,
-                {_2^4}\text{He},\,\,
-                \text{e}^{+},\,\,
-                \text{e}^{-},\,\,
-                \dots{}\,\,
-                \}
-            \end{eqnarray*}
-            %
-            The relevant contributions to the background are the cosmic-rays.
-            %
-        \subsubsection*{Diffuse Flux of Cosmic-Rays}
-            %
-            \begin{eqnarray*}
-                \dd{F_p}{E}[e] &=& [df_{p1}, df_{p2}, \cdots, df_{pN}]\\
-                \text{quantity}/\text{unit} &:& \text{area}^{-1} \text{(solid angle)}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\, \text{sr}^{-1}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
-                \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                %\text{code} &:& \verb|differential_flux_per_m2_per_sr_per_s_per_GeV|
-            \end{eqnarray*}
-            %
-            The diffuse, differential flux for every cosmic-ray $p$ in $\mathbb{P}_\text{background}$. This might be taken from measurements of space-born instruments e.g. \cite{aguilar2014precision,aguilar2015precision}.
-            %
-            More precisely: For Cherenkov-instruments observing at energies at and below the geomagnetic cutoff this is not the flux of cosmic particles, but the flux of air-showers.
-            %
-            For such instruments this includes the geomagnetic cutoff, and the flux of air-showers induced by terrestrial, 'secondary' particles \cite{lipari2002fluxes}.
-            %
-        \subsubsection*{Effective Acceptance for Cosmic-Rays (Background) After All Cuts}
-            \begin{eqnarray*}
-                Q_p[e] &=& [q_{p1}, q_{p2}, \cdots, q_{pN}]\\
-                \text{quantity}/\text{unit} &:& \text{area} \, \text{(solid angle)} / \text{m}^{2}\,\text{sr}\\
-                \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                %\text{code} &:& \verb|acceptance_m2_sr|
-            \end{eqnarray*}
-            %
-            The effective acceptance of our instrument to detect an air-shower induced by cosmic-ray $p$ with true energy $E$ that was falsely classified to be a gamma-ray.
-            %
-            Acceptance, the product of area and solid angle, is also called etendue.
-            %
-        \subsubsection*{Effective Area for Gamma-Rays (Signal) After All Cuts}
-            \begin{eqnarray*}
-                A_\gamma[e] &=& [a_{\gamma 1}, a_{\gamma 2}, \cdots, a_{\gamma N}]\\
-                \text{quantity}/\text{unit} &:& \text{area} / \text{m}^{2}\\
-                \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                %\text{code} &:& \verb|signal_area_m2|
-            \end{eqnarray*}
-            %
-            The effective area of our instrument to detect a gamma-ray with true energy $E$ which the instrument positively classifies to be a gamma-ray.
-            %
-            $A_\gamma$ is estimated in simulations applying the same cuts as in $Q_p$.
-            %
-        \subsubsection*{Conditional Probability to Confuse Energy}
-            %
-            Our instrument's conditional probability
-            %
-            \begin{eqnarray*}
-                M_p[e, e'] &=& M_p(E' \vert E)\\
-                &=&
-                  \left[ {\begin{array}{ccc}
-                    m_{11} & \cdots & m_{1N}\\
-                    \vdots & \ddots & \vdots\\
-                    m_{N1} & \cdots & m_{NN}\\
-                  \end{array} } \right]\\
-                \text{quantity}/\text{unit} &:& \text{probability}/1\\
-                \text{shape} &:& \text{matrix of}\,\,N \times N \,\,\text{floats}\\
-                %\text{code} &:& \verb|energy_reco_given_true_ax0true_ax1reco|
-            \end{eqnarray*}
-            %
-            to reconstruct cosmic particle $p$ to have reconstructed energy $E'$ given the particle has true energy $E$.
-            %
-            We need this for every particle $p$ in $\gamma \cup P_\text{background}$.
-            %
-            Here only events which are classified to be gamma-rays contribute, i.e. same cuts as in $Q_p$ and $A_\gamma$.
-            %
-            The integral in reconstructed energy $e'$ over the conditional probability has to be normalized
-            %
-            \begin{eqnarray*}
-                \sum_{e'} M_p[e, e'] = 1, \forall e.
-            \end{eqnarray*}
-            %
-        \subsubsection*{Algorithm $C$ to Estimate the Critical Number of Signal-Counts $N_S$}
-            %
-            After we will have estimated the number of background-counts in the on-region $\hat{N}_B$, we use an algorithm $C$ to estimate the minimal number of signal-counts in the on-region
-            %
-            \begin{eqnarray*}
-                N_S[e'] &=& C(\hat{N}_B[e'],\,\,S,\,\,\dots)\\
-                \text{quantity}/\text{unit} &:& \text{intensity}/1\\
-                \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
-                %\text{code} &:& \verb|critical_signal_counts_1|
-            \end{eqnarray*}
-            %
-            which is required to claim a detection.
-            %
-            There exist multiple flavors of $C$.
-            %
-            A minimal input to $C$ might be:
-            %
-            \begin{itemize}
+        \subsection{Input from Instrument}
+            \subsubsection*{The Set of Contributions to the Background}
                 %
-                \item{} The number of background-counts in the on-region $\hat{N}_B$.
+                \begin{eqnarray*}
+                    \mathbb{P}_\text{background} &=& \{
+                    {_1^1}\text{H},\,\,
+                    {_2^4}\text{He},\,\,
+                    \text{e}^{+},\,\,
+                    \text{e}^{-},\,\,
+                    \dots{}\,\,
+                    \}
+                \end{eqnarray*}
                 %
-                \item{} The minimal significance $S$ a signal has to have in order to be considered unlikely to be a fluctuation in the background.
+                The relevant contributions to the background are the cosmic-rays.
                 %
-                $S$ is commonly chosen to be $5\sigma$, (std.\,dev.).
+            \subsubsection*{Effective Acceptance for Cosmic-Rays (Background) After All Cuts}
+                \begin{eqnarray*}
+                    Q_p[e] &=& [q_{p1}, q_{p2}, \cdots, q_{pN}]\\
+                    \text{quantity}/\text{unit} &:& \text{area} \, \text{(solid angle)} / \text{m}^{2}\,\text{sr}\\
+                    \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
+                    %\text{code} &:& \verb|acceptance_m2_sr|
+                \end{eqnarray*}
                 %
-                \item{} A method to estimate $S$ based on the counts in the on- and off-regions. Here commonly Equation\,17 in \cite{li1983analysis} is used.
+                The effective acceptance of our instrument to detect an air-shower induced by cosmic-ray $p$ with true energy $E$ that was falsely classified to be a gamma-ray.
                 %
-                \item{} An estimate for the systematic uncertainties of the instrument. This commonly demands $N_S/\hat{N}_B >\approx 5\%$.
+                Acceptance, the product of area and solid angle, is also called etendue.
                 %
-                When our instrument runs into this limit, more observation-time $T_\text{obs}$ will no longer decrease the required flux to claim a detection.
+            \subsubsection*{Effective Area for Gamma-Rays (Signal) After All Cuts}
+                \begin{eqnarray*}
+                    A_\gamma[e] &=& [a_{\gamma 1}, a_{\gamma 2}, \cdots, a_{\gamma N}]\\
+                    \text{quantity}/\text{unit} &:& \text{area} / \text{m}^{2}\\
+                    \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
+                    %\text{code} &:& \verb|signal_area_m2|
+                \end{eqnarray*}
                 %
-                \item{}
-                A limit on the minimal amount of statistics. This is commonly used to make sure that the estimator for $S$ operates in a valid range of inputs.
+                The effective area of our instrument to detect a gamma-ray with true energy $E$ which the instrument positively classifies to be a gamma-ray.
                 %
-                This might require the counts in the on- and off-regions to be above a minimal threshold e.g. $N_\text{on} > 10$.
+                $A_\gamma$ is estimated in simulations applying the same cuts as in $Q_p$.
                 %
-            \end{itemize}
+            \subsubsection*{Conditional Probability to Confuse Energy}
+                %
+                Our instrument's conditional probability
+                %
+                \begin{eqnarray*}
+                    M_p[e, e'] &=& M_p(E' \vert E)\\
+                    &=&
+                      \left[ {\begin{array}{ccc}
+                        m_{11} & \cdots & m_{1N}\\
+                        \vdots & \ddots & \vdots\\
+                        m_{N1} & \cdots & m_{NN}\\
+                      \end{array} } \right]\\
+                    \text{quantity}/\text{unit} &:& \text{probability}/1\\
+                    \text{shape} &:& \text{matrix of}\,\,N \times N \,\,\text{floats}\\
+                    %\text{code} &:& \verb|energy_reco_given_true_ax0true_ax1reco|
+                \end{eqnarray*}
+                %
+                to reconstruct cosmic particle $p$ to have reconstructed energy $E'$ given the particle has true energy $E$.
+                %
+                We need this for every particle $p$ in $\gamma \cup P_\text{background}$.
+                %
+                Here only events which are classified to be gamma-rays contribute, i.e. same cuts as in $Q_p$ and $A_\gamma$.
+                %
+                The integral in reconstructed energy $e'$ over the conditional probability has to be normalized
+                %
+                \begin{eqnarray*}
+                    \sum_{e'} M_p[e, e'] = 1, \forall e.
+                \end{eqnarray*}
+                %
+        \subsection{Input general}
             %
+            \subsubsection*{Diffuse Flux of Cosmic-Rays}
+                %
+                \begin{eqnarray*}
+                    \dd{F_p}{E}[e] &=& [df_{p1}, df_{p2}, \cdots, df_{pN}]\\
+                    \text{quantity}/\text{unit} &:& \text{area}^{-1} \text{(solid angle)}^{-1} \text{time}^{-1} \text{energy}^{-1} / \text{m}^{-2}\, \text{sr}^{-1}\,\text{s}^{-1}\,\text{GeV}^{-1}\\
+                    \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
+                    %\text{code} &:& \verb|differential_flux_per_m2_per_sr_per_s_per_GeV|
+                \end{eqnarray*}
+                %
+                The diffuse, differential flux for every cosmic-ray $p$ in $\mathbb{P}_\text{background}$.
+                %
+                More precisely: For Cherenkov-instruments observing at energies at and below the geomagnetic cutoff this is not the flux of cosmic particles, but the flux of air-showers induced by these particle and includes e.g. the flux of air-showers induced by terrestrial, 'secondary' particles \cite{lipari2002fluxes}.
+                %
+        \subsection{Input general}
+            %
+            \subsubsection*{Observation-Time}
+                %
+                \begin{eqnarray*}
+                    T_\text{obs} && \\
+                    \text{quantity}/\text{unit} &:& \text{time} / s\\
+                    \text{shape} &:& \text{float}\\
+                    %\text{code} &:& \verb|observation_time_s|
+                \end{eqnarray*}
+                %
+                The observation-time $T_\text{obs}$ is the accumulated duration our instrument was ready to trigger and record an event.
+                %
+                Commonly, Cherenkov-telescopes show $T_\text{obs} = 50\,$h or $T_\text{obs} = 1800\,$s. for todays quickest transients.
+                %
+            \subsubsection*{Algorithm $C$ to Estimate the Critical Number of Signal-Counts $N_S$}
+                %
+                I list this as an input because I found different flavours of it in the wild.
+                %
+                After we will have estimated the number of background-counts in the on-region $\hat{N}_B$, we use this algorithm $C$ to estimate the minimal number of signal-counts in the on-region
+                %
+                \begin{eqnarray*}
+                    N_S[e'] &=& C(\hat{N}_B[e'],\,\,S,\,\,\dots)\\
+                    \text{quantity}/\text{unit} &:& \text{intensity}/1\\
+                    \text{shape} &:& \text{list of}\,\,N\,\,\text{floats}\\
+                    %\text{code} &:& \verb|critical_signal_counts_1|
+                \end{eqnarray*}
+                %
+                which is required to claim a detection.
+                %
+                A minimal input to $C$ might be:
+                %
+                \begin{itemize}
+                    %
+                    \item{}
+                        The number of background-counts in the on-region $\hat{N}_B$.
+                        %
+                    \item{}
+                        The minimal significance $S$ a signal has to have in order to be considered unlikely to be a fluctuation in the background.
+                        %
+                        $S$ is commonly chosen to be $5\sigma$, (std.\,dev.).
+                        %
+                    \item{}
+                        A method to estimate $S$ based on the counts in the on- and off-regions. Here commonly Equation\,17 in \cite{li1983analysis} is used.
+                        %
+                    \item{}
+                        An estimate for the systematic uncertainties of the instrument. This commonly demands $N_S/\hat{N}_B >\approx 5\%$.
+                        %
+                        When our instrument runs into this limit, more observation-time $T_\text{obs}$ will no longer decrease the required flux to claim a detection.
+                        %
+                    \item{}
+                        A limit on the minimal amount of statistics. This is commonly used to make sure that the estimator for $S$ operates in a valid range of inputs.
+                        %
+                        This might require the counts in the on- and off-regions to be above a minimal threshold e.g. $N_\text{on} > 10$.
+                        %
+                \end{itemize}
+                %
         \subsection{Procedure}
             \label{SubSecProcedure}
             %
