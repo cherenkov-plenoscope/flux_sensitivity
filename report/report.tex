@@ -356,107 +356,105 @@
         I name the scenarios using colors. There is no deeper meaning behind this. It is just to tell them apart without implying a hierarchy.
         %
     \subsection{blue}
-    %
-    This is not realistic. This simply assumes that the instrument's reconstruction for true gamma-rays is perfect.
-    %
-    The true cosmic-rays are still confused in energy, see Equation \ref{EqRp}.
-    %
-    \begin{eqnarray}
-        G[e, e'] &=& \mathrm{eye}(n)
-        \\
-        B[e, e'] &=& \mathrm{eye}(n)
-    \end{eqnarray}
-    %
-    \begin{center}
-        \begin{tabular}{ll}
-            spectrum of source & narrow band\\
-            energy-label & true\\
-        \end{tabular}
-    \end{center}
-    %
+        %
+        This is not realistic. This simply assumes that the instrument's reconstruction for true gamma-rays is perfect.
+        %
+        The true cosmic-rays are still confused in energy, see Equation \ref{EqRp}.
+        %
+        \begin{eqnarray}
+            G[e, e'] &=& \mathrm{eye}(n)
+            \\
+            B[e, e'] &=& \mathrm{eye}(n)
+        \end{eqnarray}
+        %
+        \begin{center}
+            \begin{tabular}{ll}
+                spectrum of source & narrow band\\
+                energy-label & true\\
+            \end{tabular}
+        \end{center}
+        %
     \subsection{yellow}
-    %
-    This assumes that the source emits gamma-rays in all bins of true energy.
-    %
-    True gamma-rays which have their energy confused to wrong bins can still contribute to the signal and are not cut away.
-    %
-    This means the that the elements off the diagonal in $G$ can be larger than zero.
-    %
-    This might be interesting for a general detection of a source which is assumed to have a broad spectrum, and actual shape of the spectrum does not matter too much.
-    %
-    It is also a common choice when the reconstruction of energy is 'good', thus $M_\gamma \approx \mathrm{eye}(N)$.
-    %
-    \begin{eqnarray}
-        G[e, e'] &=& M_{\gamma}[e, e']
-        \\
-        B[e, e'] &=& \mathrm{eye}(N)
-    \end{eqnarray}
-    %
-    \begin{center}
-        \begin{tabular}{ll}
-            spectrum of source & broad\\
-            energy-label & reconstructed\\
-        \end{tabular}
-    \end{center}
-    %
+        %
+        This assumes that the source emits gamma-rays in all bins of true energy.
+        %
+        True gamma-rays which have their energy confused to wrong bins can still contribute to the signal and are not cut away.
+        %
+        This means the that the elements off the diagonal in $G$ can be larger than zero.
+        %
+        This might be interesting for a general detection of a source which is assumed to have a broad spectrum, and actual shape of the spectrum does not matter too much.
+        %
+        It is also a common choice when the reconstruction of energy is 'good', thus $M_\gamma \approx \mathrm{eye}(N)$.
+        %
+        \begin{eqnarray}
+            G[e, e'] &=& M_{\gamma}[e, e']
+            \\
+            B[e, e'] &=& \mathrm{eye}(N)
+        \end{eqnarray}
+        %
+        \begin{center}
+            \begin{tabular}{ll}
+                spectrum of source & broad\\
+                energy-label & reconstructed\\
+            \end{tabular}
+        \end{center}
+        %
     \subsection{green}
-    %
-    This assumes that the source emits gamma-rays only in a single bin of energy, i.e. the source's spectrum is a narrow band.
-    %
-    Here we only take true gamma-rays into account which end inside the bin of reconstructed energy which equals the true, and expected energy.
-    %
-    However, we still respect that $M_{\gamma} \neq \mathrm{eye}(n)$ and thus reduce the probability according to the diagonal of the confusion-matrix $M_{\gamma}$.
-    %
-    \begin{eqnarray}
-        G[e, e'] &=& \mathrm{diag}(M_{\gamma}[e, e'])
-        \\
-        B[e, e'] &=& \mathrm{eye}(N)
-    \end{eqnarray}
-    %
-    \begin{center}
-        \begin{tabular}{ll}
-            spectrum of source & narrow band\\
-            energy-label & reconstructed\\
-        \end{tabular}
-    \end{center}
-    %
+        %
+        This assumes that the source emits gamma-rays only in a single bin of energy, i.e. the source's spectrum is a narrow band.
+        %
+        Here we only take true gamma-rays into account which end inside the bin of reconstructed energy which equals the true, and expected energy.
+        %
+        However, we still respect that $M_{\gamma} \neq \mathrm{eye}(n)$ and thus reduce the probability according to the diagonal of the confusion-matrix $M_{\gamma}$.
+        %
+        \begin{eqnarray}
+            G[e, e'] &=& \mathrm{diag}(M_{\gamma}[e, e'])
+            \\
+            B[e, e'] &=& \mathrm{eye}(N)
+        \end{eqnarray}
+        %
+        \begin{center}
+            \begin{tabular}{ll}
+                spectrum of source & narrow band\\
+                energy-label & reconstructed\\
+            \end{tabular}
+        \end{center}
+        %
     \subsection{black}
-    %
-    This assumes the same spectrum of the source as the Band-Spectrum.
-    %
-    Now unlike in all other scenarios, here we widen the range of background over which we have to integrate in order to collect a certain fraction $c$ of the signal.
-    %
-    This method is proposed by Werner Hofmann.
-    %
-    It can be done with an actual instrument without further assumptions, and it can show the true energy in the differential sensitivity what makes this scenario both safe and meaningful for astronomy.
-    %
-    \begin{eqnarray}
-        G[e, e'] &=& c \, \, \mathrm{eye}(N)
-        \\
-        B[e, e'] &=& \mathrm{bellmask}(M_{\gamma}[e, e'], \, c)
-    \end{eqnarray}
-    %
-    \begin{center}
-        \begin{tabular}{ll}
-            spectrum of source & narrow band\\
-            energy-label & true\\
-        \end{tabular}
-    \end{center}
-    %
-    The $\mathrm{bellmask}$ is a matrix with shape $(N,N)$ containing weights in range $[0$ to $1]$.
-    %
-    The $\mathrm{bellmask}$ depends on the energy confusion $M_{\gamma}$ and the containment $c$.
-    %
-    For each bin in true energy $e$, the row $\mathrm{bellmask}()[e, :]$ marks the bins in reconstructed energy $e'$ over which we have to integrate in order to contain the fraction $c$ of the events with true energy $e$.
-    %
-    The actual implementation of $\mathrm{bellmask}$ might differ, as it is not straight forward how to treat multiple maxima in $M_\gamma(E'\vert E)$, or how to handle discrete binning, but it has to fulfill
-    %
-    \begin{eqnarray}
-        c &=& \sum_{e'} \mathrm{bellmask}[e ,e'] \, M_{\gamma}[e', e], \,\,\,\,\,\, \forall e.
-    \end{eqnarray}
-    %
-    I named it bell-spectrum as the mask in $B$ is a bell when $M_\gamma$ is a bell itself. But this name is misleading as it suggests the source of gamma-rays has a bell like spectrum.
-    %
+        %
+        This method is proposed by Werner Hofmann.
+        %
+        This assumes the same spectrum of the source as the green scenario.
+        %
+        Now unlike in all other scenarios, here we widen the range of background over which we have to integrate in order to collect a certain fraction $c$ of the signal.
+        %
+        It can be done with an actual instrument without further assumptions, and it can show the true energy in the differential sensitivity what makes this scenario both safe and meaningful for astronomy.
+        %
+        \begin{eqnarray}
+            G[e, e'] &=& c \, \, \mathrm{eye}(N)
+            \\
+            B[e, e'] &=& \mathrm{bellmask}(M_{\gamma}[e, e'], \, c)
+        \end{eqnarray}
+        %
+        \begin{center}
+            \begin{tabular}{ll}
+                spectrum of source & narrow band\\
+                energy-label & true\\
+            \end{tabular}
+        \end{center}
+        %
+        The $\mathrm{bellmask}$ is a matrix with shape $(N,N)$ containing weights in range $[0$ to $1]$.
+        %
+        The $\mathrm{bellmask}$ depends on the energy confusion $M_{\gamma}$ and the containment $c$.
+        %
+        For each bin in true energy $e$, the row $\mathrm{bellmask}()[e, :]$ marks the bins in reconstructed energy $e'$ over which we have to integrate in order to contain the fraction $c$ of the events with true energy $e$.
+        %
+        The actual implementation of $\mathrm{bellmask}$ might differ, as it is not straight forward how to treat multiple maxima in $M_\gamma(E'\vert E)$, or how to handle discrete binning, but it has to fulfill
+        %
+        \begin{eqnarray}
+            c &=& \sum_{e'} \mathrm{bellmask}[e ,e'] \, M_{\gamma}[e', e], \,\,\,\,\,\, \forall e.
+        \end{eqnarray}
+        %
     \bibliographystyle{apalike}%
     \bibliography{references}%
 \end{document}
