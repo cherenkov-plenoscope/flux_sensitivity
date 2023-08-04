@@ -80,17 +80,20 @@ def estimate_differential_sensitivity(
 
 
 SCENARIOS = {
-    "perfect_energy": {"energy_axes_label": "",},
-    "broad_spectrum": {"energy_axes_label": "reco. ",},
-    "line_spectrum": {"energy_axes_label": "reco. ",},
-    "bell_spectrum": {"energy_axes_label": "",},
+    "blue": {"energy_axes_label": "", "obsolete_key": "perfect_energy"},
+    "yellow": {
+        "energy_axes_label": "reco. ",
+        "obsolete_key": "broad_spectrum",
+    },
+    "green": {"energy_axes_label": "reco. ", "obsolete_key": "line_spectrum"},
+    "black": {"energy_axes_label": "", "obsolete_key": "bell_spectrum"},
 }
 
 
 def init_scenario_matrices_for_signal_and_background(
     probability_reco_given_true,
     probability_reco_given_true_au,
-    scenario_key="broad_spectrum",
+    scenario_key="yellow",
 ):
     """
     Make the scenario dependent matrices G for signal and B for background
@@ -112,21 +115,21 @@ def init_scenario_matrices_for_signal_and_background(
     shape = probability_reco_given_true.shape
     assert probability_reco_given_true_au.shape == shape
 
-    if scenario_key == "perfect_energy":
+    if scenario_key == "blue":
         G = np.eye(N=shape[0])
         G_au = np.zeros(shape=shape)  # zero uncertainty
 
         B = np.eye(N=shape[0])
         B_au = np.zeros(shape=shape)
 
-    elif scenario_key == "broad_spectrum":
+    elif scenario_key == "yellow":
         G = np.array(probability_reco_given_true)
         G_au = np.array(probability_reco_given_true_au)  # adopt as is
 
         B = np.eye(N=shape[0])
         B_au = np.zeros(shape=shape)
 
-    elif scenario_key == "line_spectrum":
+    elif scenario_key == "green":
         # only the diagonal
         eye = np.eye(N=shape[0])
         G = eye * np.diag(probability_reco_given_true)
@@ -135,12 +138,12 @@ def init_scenario_matrices_for_signal_and_background(
         B = np.eye(N=shape[0])
         B_au = np.zeros(shape=shape)
 
-    elif scenario_key == "bell_spectrum":
+    elif scenario_key == "black":
         containment = 0.68
         G = containment * np.eye(N=shape[0])  # true energy for gammas
         G_au = np.zeros(shape=shape)  # zero uncertainty
 
-        B = scenarios.bell_spectrum.init_B(
+        B = scenarios.black.init_matrix_B(
             probability_reco_given_true=probability_reco_given_true,
             containment=containment,
         )

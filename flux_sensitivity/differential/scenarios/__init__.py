@@ -1,1 +1,1 @@
-from . import bell_spectrum
+from . import black

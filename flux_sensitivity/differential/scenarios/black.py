@@ -1,28 +1,7 @@
 import numpy as np
 
 
-def next_containment_and_weight(
-    accumulated_containment, bin_containment, target_containment,
-):
-    assert 0 <= accumulated_containment <= 1
-    assert 0 <= bin_containment <= 1
-    assert 0 < target_containment <= 1
-
-    missing_containment = target_containment - accumulated_containment
-    assert missing_containment > 0
-
-    if bin_containment > 0:
-        weight = np.min([missing_containment / bin_containment, 1])
-    else:
-        weight = 0
-
-    if weight == 1:
-        return accumulated_containment + bin_containment, 1
-    else:
-        return target_containment, weight
-
-
-def init_B(probability_reco_given_true, containment=0.68):
+def init_matrix_B(probability_reco_given_true, containment=0.68):
     # ax0 -> true
     # ax1 -> reco
     num_bins = probability_reco_given_true.shape[0]
@@ -76,3 +55,24 @@ def init_B(probability_reco_given_true, containment=0.68):
                 i += 1
                 assert i < 2 * num_bins
     return mask
+
+
+def next_containment_and_weight(
+    accumulated_containment, bin_containment, target_containment,
+):
+    assert 0 <= accumulated_containment <= 1
+    assert 0 <= bin_containment <= 1
+    assert 0 < target_containment <= 1
+
+    missing_containment = target_containment - accumulated_containment
+    assert missing_containment > 0
+
+    if bin_containment > 0:
+        weight = np.min([missing_containment / bin_containment, 1])
+    else:
+        weight = 0
+
+    if weight == 1:
+        return accumulated_containment + bin_containment, 1
+    else:
+        return target_containment, weight
