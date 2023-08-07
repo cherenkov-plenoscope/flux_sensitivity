@@ -39,6 +39,7 @@ This package offeres multiple scenarios how to handle the instrument's non perfe
 Each scenario results in a different estimate for the instrument's differential sensitivity.
 The scenarios are named using colors to point out their differences while not implying a hierachy.
 We compiled this list of scenarios from what we found in the wild.
+We do not think that any of the shown scenarios is superior, we just want to raise awareness.
 
 The figure below shows the settle differences of the scenarios.
 
@@ -55,7 +56,7 @@ The figure below shows the settle differences of the scenarios.
 | and the flux of the Crab-nebula (``1e0``, ``1e-1``, ``1e-2``, ``1e-3``) is in dashed lines.   |
 +-----------------------------------------------------------------------------------------------+
 
-Each scenario is represented by two matrices ``G`` and ``B``.
+Fortunately, we found a way to represent each scenario by using the two matrices ``G`` and ``B``.
 Matrix ``G`` defines how a scenario takes the effective area for the signal into account,
 and matrix ``B`` defines how a scenario takes the rate of background into account.
 
