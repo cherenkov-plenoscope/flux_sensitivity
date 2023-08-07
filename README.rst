@@ -21,7 +21,7 @@ Rate of background
     
     The rate of background (the sum of all contributions) w.r.t. to reconstructed gamma-ray-energy.
 
-Area for signal
+Area for signal ``A[e]``
     |img_irf_signal_area|
 
     The effective area to collect gamma-rays w.r.t. the true gamma-ray-energy.
@@ -57,8 +57,19 @@ The figure below shows the settle differences of the scenarios.
 +-----------------------------------------------------------------------------------------------+
 
 Fortunately, we found a way to represent each scenario by using the two matrices ``G`` and ``B``.
-Matrix ``G`` defines how a scenario takes the effective area for the signal into account,
-and matrix ``B`` defines how a scenario takes the rate of background into account.
+Matrix ``G`` defines how a scenario takes the effective area for the signal into account
+
+.. math::
+
+   A^k[e'] &=& \sum_{e} G^k[e, e'] A[e],
+
+and matrix ``B`` defines how a scenario takes the rate of background into account
+
+.. math::
+
+   R^k[e'] &=& \sum_{e} B^k[e, e'] R[e].
+
+Here ``R^k[e]`` is the rate of background in scenario ``k``.
 
 Blue
 ----
