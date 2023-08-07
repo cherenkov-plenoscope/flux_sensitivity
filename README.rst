@@ -197,10 +197,30 @@ The advantage here is, that matrix ``G`` has only zeros off its diagonal and thu
 +---------------------------------------+-------------------------------------------------------+
 
 
-Critical Rate
-=============
-Independent of the scenarios we listed, there is one additional degree of freedom when computing a differential sensitivity.
-This is the compute of the critical rate which is required in order to claim a detection.
+Algorithm ``C`` to Estimate the Critical Number of Signal-Counts ``N_S``
+========================================================================
+Independent of the presented scenarios, there are additional degrees of freedom when computing a differential sensitivity.
+One is: The algorithm ``C`` to compute critical rate which is required in order to claim a detection.
+After we will have estimated the number of background-counts in the on-region ``\hat{N}_B``, we use this algorithm ``C`` to estimate the minimal number of signal-counts in the on-region
+
+.. math::
+    N_S[e'] &=& C(\hat{N}_B[e'], S, \dots)
+
+which is required to claim a detection.
+A minimal input to ``C`` might be:
+
+- The number of background-counts in the on-region ``\hat{N}_B``.
+
+- The minimal significance ``S`` a signal has to have in order to be considered unlikely to be a fluctuation in the background.
+  ``S`` is commonly chosen to be ``5\sigma``, (std.\,dev.).
+
+- A method to estimate $S$ based on the counts in the on- and off-regions. Here commonly Equation\,17 in \cite{li1983analysis} is used.
+
+- An estimate for the systematic uncertainties of the instrument. This commonly demands ``N_S/\hat{N}_B > \approx 5\%``.
+  When our instrument runs into this limit, more observation-time $T_\text{obs}$ will no longer decrease the required flux to claim a detection.
+    
+- A limit on the minimal amount of statistics. This is commonly used to make sure that the estimator for ``S`` operates in a valid range of inputs.
+  This might require the counts in the on- and off-regions to be above a minimal threshold e.g. ``N_\text{on} > 10``.
 
 
 .. |BlackStyle| image:: https://img.shields.io/badge/code%20style-black-000000.svg
