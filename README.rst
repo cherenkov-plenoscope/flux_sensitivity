@@ -15,8 +15,9 @@ From the response-function we need the following three estimates:
 Instrument Response Function
 ============================
 To be precise: This response-function is what I (as a non CTA-member) extracted from the provided documentation. To extract these quantities I interpolate and/or average over e.g. solid angle.
+We use ``e`` for true gamma-ray-energy and ``e'`` for reconstructed gamma-ray-energy.
 
-Rate of background
+Rate of background ``R[e']``
     |img_irf_background_rate_onregion|
     
     The rate of background (the sum of all contributions) w.r.t. to reconstructed gamma-ray-energy.
@@ -26,7 +27,7 @@ Area for signal ``A[e]``
 
     The effective area to collect gamma-rays w.r.t. the true gamma-ray-energy.
 
-Probability to confuse energy
+Probability to confuse energy ``M_\gamma[e, e']``
     |img_irf_probability_reco_given_true|
 
     The probabilty to confuse the true with the reconstructed gamma-ray-energy.
