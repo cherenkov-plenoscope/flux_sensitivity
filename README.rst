@@ -132,11 +132,13 @@ The wider range in energy is estimated using the instruments confusion in energy
 To represent the containment of 68% in the signal, this scenarios area in signal uses a matrix ``G`` with the elements on its diagonal being ``0.68``.
 The advantage here is, that matrix ``G`` has only zeros off its diagonal and thus the black scenario can show the true gamma-rays-energy on its energy-axis. 
 
-+-------------------------------------+--------------------------------------------+
-| Matrix ``G``                        | Matrix ``B``                               |
-+=====================================+============================================+
-| |img_G_matrix_in_scenario_black|    | |img_B_matrix_in_scenario_black|           |
-+-------------------------------------+--------------------------------------------+
++-------------------------------------+--------------------------------------------------------------------------+
+| Matrix ``G``                        | Matrix ``B``                                                             |
++=====================================+==========================================================================+
+| |img_G_matrix_in_scenario_black|    | |img_B_matrix_in_scenario_black|                                         |
++-------------------------------------+--------------------------------------------------------------------------+
+| Elements on diagonal are ``0.68``.  | At low energies, the range in energy is wider to collect enough signal.  |
++-------------------------------------+--------------------------------------------------------------------------+
 
 +-------------------------------------+--------------------------------------------+
 | Area for signal                     | Rate of background                         |
