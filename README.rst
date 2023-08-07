@@ -53,7 +53,7 @@ Probability to confuse energy ``M_\gamma[e, e']``
     |img_irf_probability_reco_given_true|
 
     The probabilty to confuse the true with the reconstructed gamma-ray-energy.
-    This is also called `energy migration'.
+    This is also called energy-migration.
 
 Scenarios
 =========
