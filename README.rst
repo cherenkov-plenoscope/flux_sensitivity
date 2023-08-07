@@ -87,7 +87,7 @@ Thus its matrix ``G`` is the unit-matrix.
 As a result, the blue scenario's area for the signal is the area for the signal estimated in the instrument's response-function.
 As matrix ``G`` does not mix true and reconstructed energy, the blue scenario shows the true gamma-ray-energy, what is good.
 The matrix ``B`` is also the unit-matrix so that this scenario's rate of background is the estimated rate in the instrument's response-function.
-But ofcourse the blue scenario falls short when the instrumen's confusion in energy is significant.
+But of course the blue scenario falls short when the instrumen's confusion in energy is significant.
 
 +-------------------------------------+--------------------------------------------+
 | Matrix ``G``                        | Matrix ``B``                               |
@@ -113,10 +113,12 @@ But ofcourse the blue scenario falls short when the instrumen's confusion in ene
 
 Yellow
 ------
-The ``yellow`` scenario not only takes the signal in the energy-bin under investigation into account, but also other bins in reconstructed gamma-ray-energy where the true gamma-ray-energy was confused to.
+The ``yellow`` scenario not only takes the signal in the energy-bin under investigation into account,
+but also other bins in reconstructed gamma-ray-energy where the true gamma-ray-energy was confused to.
 This is done by setting the matrix ``G`` to be the confusion of the instrument.
 Thus in the yellow scenario the area of the signal can exceed the area estimated in the instrument's response function.
-Unfortunately, the yellow scenario's matrix ``G`` has non zero elements off its diagonal what makes the interpretation of this scenario's energy-axis difficult.
+Unfortunately, the yellow scenario's matrix ``G`` has non zero elements off its diagonal what makes the
+interpretation of this scenario's energy-axis difficult.
 It is no longer only true gamma-ray-energy.
 
 
@@ -142,9 +144,14 @@ It is no longer only true gamma-ray-energy.
 
 Green
 -----
-The ``green`` scenario sets its matrix ``G`` to only the diagonal of the instrument's confusion.
-With only zero off its diagonal, the matrix ``G`` allows the green scenario to show true gamma-ray-energy.
-However, the green scenario is rather conservative in most astronomical applications as it represents the sensitivity to detect a source which only emits gamma-rays in a narrow range of energies.
+The ``green`` scenario sets its matrix ``G`` to only the diagonal of the instrument's 
+confusion.
+With only having zeros off its diagonal, the matrix ``G`` allows the green scenario to 
+show true gamma-ray-energy.
+However, the green scenario is rather conservative in most astronomical applications
+as it represents the sensitivity to detect a source which only emits gamma-rays in a
+narrow range of energies and further ignores all the signal which was confused to
+different energies.
 
 +-------------------------------------+--------------------------------------------+
 | Matrix ``G``                        | Matrix ``B``                               |
@@ -176,9 +183,9 @@ The ``black`` scenario was proposed by Werner Hofmann and takes a different appr
 Instead of altering the area of the signal, this scenario alters the rate of the background.
 The black scenario widens the energy-range in the background to the range required to collect one sigma (68%) of the signal.
 This means that matrix ``B`` now collects contributions from multiple bins in reconstructed gamma-ray-energy.
-The wider range in energy is estimated using the instruments confusion in energy by estimating the range in reconstructed gamma-ray-energy which contains 68% of the gamma-rays.
-To represent the containment of 68% in the signal, this scenarios area in signal uses a matrix ``G`` with the elements on its diagonal being ``0.68``.
-The advantage here is, that matrix ``G`` has only zeros off its diagonal and thus the black scenario can show the true gamma-rays-energy on its energy-axis. 
+The wider range in energy is estimated using the instruments confusion in energy by estimating the range in reconstructed gamma-ray-energy which contains 68% of the signal.
+To represent the containment of 68% in the signal, this scenario's matrix ``G`` has the elements on its diagonal set to ``0.68``.
+Matrix ``G`` has only zeros off its diagonal and thus the black scenario can show the true gamma-rays-energy on its energy-axis. 
 
 +-------------------------------------+--------------------------------------------------------------------------+
 | Matrix ``G``                        | Matrix ``B``                                                             |
