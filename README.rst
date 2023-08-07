@@ -151,7 +151,7 @@ However, the green scenario is rather conservative in most astronomical applicat
 +=====================================+============================================+
 | |img_G_matrix_in_scenario_green|    | |img_B_matrix_in_scenario_green|           |
 +-------------------------------------+--------------------------------------------+
-| Diagonal is taken from confusion.   |                                            |
+| Diagonal from energy-confusion.     |                                            |
 +-------------------------------------+--------------------------------------------+
 
 +-------------------------------------+--------------------------------------------+
