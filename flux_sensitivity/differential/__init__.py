@@ -85,7 +85,7 @@ SCENARIOS = {
         "energy_axes_label": "reco. ",
         "obsolete_key": "broad_spectrum",
     },
-    "green": {"energy_axes_label": "reco. ", "obsolete_key": "line_spectrum"},
+    "green": {"energy_axes_label": "", "obsolete_key": "line_spectrum"},
     "black": {"energy_axes_label": "", "obsolete_key": "bell_spectrum"},
 }
 
