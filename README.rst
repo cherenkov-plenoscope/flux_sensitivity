@@ -5,8 +5,22 @@ Estimate the Sensitivity of your Instrument
 
 Made for astronomy with gamma-rays in the atmospheric Cherenkov-method to compute the integral or differential sensitivity of your instrument with respect to the gamma-rays energy.
 
+Key features:
+
+- Estimates differential sensitivity
+
+- Estimates integral sensitivity
+
+- Propagates uncertainties for all quantities, everywhere
+
+Related to:
+
+- https://github.com/cherenkov-plenoscope/lima1983analysis
+
+- https://github.com/cherenkov-plenoscope/spectral_energy_distribution_units
+
 *******
-install
+Install
 *******
 
 .. code-block::
