@@ -62,12 +62,12 @@ and matrix ``B`` defines how a scenario takes the rate of background into accoun
 
 Blue
 ----
-The ``blue`` scenario handles the instrument's non perfec reconstruction in energy by simply ignoring it.
-Thus its matrix ``G`` is the unit-matrix with ones on the diagonal, and zeors everywhere else.
-As a result, this scenarios area for the signal is just the area for the signal estimated in the instrument's response-function.
-The matrix ``B`` is also the unit-matrix so that this scenario's rate of background is just the one estimated in instrument's response-function.
-The obvious problem with this is of course, that the computed differential sensitivity will be poor when the instrumen's confusion in energy is significant.
-The big advantage of this scenario is, that its energy-axis actually is the true gamma-ray-energy.
+The ``blue`` scenario handles the instrument's non perfect reconstruction in energy by simply ignoring it.
+Thus its matrix ``G`` is the unit-matrix.
+As a result, the blue scenario's area for the signal is the area for the signal estimated in the instrument's response-function.
+As matrix ``G`` does not mix true and reconstructed energy, the blue scenario shows the true gamma-ray-energy, what is good.
+The matrix ``B`` is also the unit-matrix so that this scenario's rate of background is the estimated rate in the instrument's response-function.
+But ofcourse the blue scenario falls short when the instrumen's confusion in energy is significant.
 
 +-------------------------------------+--------------------------------------------+
 | Matrix ``G``                        | Matrix ``B``                               |
@@ -84,6 +84,12 @@ The big advantage of this scenario is, that its energy-axis actually is the true
 +-------------------------------------+--------------------------------------------+
 
 |img_diff_sens_blue|
+
++-------------------------------------+--------------------------------------------+
+| pro                                 | contra                                     |
++=====================================+============================================+
+| - Shows true energy                 | - Can not handle energy-confusion          |
++-------------------------------------+--------------------------------------------+
 
 Yellow
 ------
@@ -108,6 +114,12 @@ It is no longer only true gamma-ray-energy.
 
 |img_diff_sens_yellow|
 
++---------------------------------------+--------------------------------------------+
+| pro                                   | contra                                     |
++=======================================+============================================+
+| - Takes energy-confusion into account | - Can not show true energy                 |
++---------------------------------------+--------------------------------------------+
+
 Green
 -----
 The ``green`` scenario sets its matrix ``G`` to only the diagonal of the instrument's confusion.
@@ -130,6 +142,13 @@ However, the green scenario is rather conservative in most astronomical applicat
 
 |img_diff_sens_green|
 
++---------------------------------------+-------------------------------------------------------+
+| pro                                   | contra                                                |
++=======================================+=======================================================+
+| - Shows true energy                   | - Ignores area of signal which was confused in energy |
+| - Takes into account that confusion   |                                                       |
+|   can reduce the area of the signal   |                                                       |
++---------------------------------------+-------------------------------------------------------+
 
 Black
 -----
@@ -157,9 +176,19 @@ The advantage here is, that matrix ``G`` has only zeros off its diagonal and thu
 
 |img_diff_sens_black|
 
++---------------------------------------+-------------------------------------------------------+
+| pro                                   | contra                                                |
++=======================================+=======================================================+
+| - Shows true energy                   |                                                       |
+| - Indirectly takes all                |                                                       |
+|   energy-confusion into account       |                                                       |
++---------------------------------------+-------------------------------------------------------+
+
+
 Critical Rate
 =============
-Independent of the scenarios we listed, one additional degree of freedom when computing a differential sensitivity is how one computes the critical rate which is required in order to claim a detection.
+Independent of the scenarios we listed, there is one additional degree of freedom when computing a differential sensitivity.
+This is the compute of the critical rate which is required in order to claim a detection.
 
 
 .. |BlackStyle| image:: https://img.shields.io/badge/code%20style-black-000000.svg
