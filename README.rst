@@ -73,7 +73,7 @@ The big advantage of this scenario is, that its energy-axis actually is the true
 +=====================================+============================================+
 | |img_G_matrix_in_scenario_blue|     | |img_B_matrix_in_scenario_blue|            |
 +-------------------------------------+--------------------------------------------+
-| Elements on diagonal are ``1.0 ``.  |                                            |
+| Elements on diagonal are ``1.0``.   |                                            |
 +-------------------------------------+--------------------------------------------+
 
 +-------------------------------------+--------------------------------------------+
@@ -107,7 +107,9 @@ based on the probabilities found in the instruments confusion in energy.
 
 Green
 -----
-The ``green`` scenario...
+The ``green`` scenario sets its matrix ``G`` to only the diagonal of the instrument's confusion.
+With only zero off its diagonal, the matrix ``G`` allows the green scenario to show true gamma-ray-energy.
+However, the green scenario is rather conservative in most astronomical applications as it represents the sensitivity to detect a source which only emits gamma-rays in a narrow range of energies.
 
 +-------------------------------------+--------------------------------------------+
 | Matrix ``G``                        | Matrix ``B``                               |
