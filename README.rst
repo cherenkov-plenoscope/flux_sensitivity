@@ -70,7 +70,7 @@ and matrix ``B`` defines how a scenario takes the rate of background into accoun
 
    R^k[e'] &=& \sum_{e} B^k[e, e'] R[e].
 
-Here ``R^k[e]`` is the rate of background in scenario ``k``.
+Here ``A^k[e']`` is the area of the signal and ``R^k[e]`` is the rate of background used in scenario ``k``.
 
 Blue
 ----
@@ -108,7 +108,7 @@ Yellow
 The ``yellow`` scenario not only takes the signal in the energy-bin under investigation into account, but also other bins in reconstructed gamma-ray-energy where the true gamma-ray-energy was confused to.
 This is done by setting the matrix ``G`` to be the confusion of the instrument.
 Thus in the yellow scenario the area of the signal can exceed the area estimated in the instrument's response function.
-Unfortunately, matrix ``G`` has no elements off its diagonal which are non zero and thus the interpretation of this scenario's energy-axis becomes difficult.
+Unfortunately, the yellow scenario's matrix ``G`` has non zero elements off its diagonal what makes the interpretation of this scenario's energy-axis difficult.
 It is no longer only true gamma-ray-energy.
 
 
