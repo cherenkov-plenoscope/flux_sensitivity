@@ -124,11 +124,13 @@ The ``green`` scenario...
 
 Black
 -----
-The ``black`` scenario is proposed by Werner Hofmann and takes a very different approach.
-Instead of mixing or widening the contributions of the signal, this scenario widens the acceptance to the background.
-The widening in the energy-range in the background is done up to exactly the range what is necessary to collect a certain fraction (68%) of the signal.
-The beauty of this scenario is, that the matrix ``G`` has only zeros on its non-diagonal elements what allows the energy-axis of this scenario to shoe the true gamma-ray-energy.
-Based on the instrument's confusion in energy, this scenario estimates the range in energy which is necessary to contain 68% of the signal.
+The ``black`` scenario was proposed by Werner Hofmann and takes a different approach.
+Instead of altering the area of the signal, this scenario alters the rate of the background.
+The black scenario widens the energy-range in the background to the range required to collect one sigma (68%) of the signal.
+This means that matrix ``B`` now collects contributions from multiple bins in reconstructed gamma-ray-energy.
+The wider range in energy is estimated using the instruments confusion in energy by estimating the range in reconstructed gamma-ray-energy which contains 68% of the gamma-rays.
+To represent the containment of 68% in the signal, this scenarios area in signal uses a matrix ``G`` with the elements on its diagonal being ``0.68``.
+The advantage here is, that matrix ``G`` has only zeros off its diagonal and thus the black scenario can show the true gamma-rays-energy on its energy-axis. 
 
 +-------------------------------------+--------------------------------------------+
 | Matrix ``G``                        | Matrix ``B``                               |
