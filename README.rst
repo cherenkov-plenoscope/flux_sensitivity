@@ -86,9 +86,11 @@ The big advantage of this scenario is, that its energy-axis actually is the true
 
 Yellow
 ------
-The ``yellow`` scenario handles the non-perfect reconstruction in energy by allowing true gamma-rays which where falsely
-reconstructed to have energies outside of a certain energy-bin to still contribute to the signal found in this energy-bin
-based on the probabilities found in the instruments confusion in energy.
+The ``yellow`` scenario not only takes the signal in the energy-bin under investigation into account, but also other bins in reconstructed gamma-ray-energy where the true gamma-ray-energy was confused to.
+This is done by setting the matrix ``G`` to be the confusion of the instrument.
+Thus in the yellow scenario the area of the signal can exceed the area estimated in the instrument's response function.
+Unfortunately, matrix ``G`` has no elements off its diagonal which are non zero and thus the interpretation of this scenario's energy-axis becomes difficult.
+It is no longer only true gamma-ray-energy.
 
 
 +-------------------------------------+--------------------------------------------+
