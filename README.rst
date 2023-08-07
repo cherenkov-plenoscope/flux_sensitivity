@@ -5,6 +5,14 @@ Estimate the Sensitivity of your Instrument
 
 Made for astronomy with gamma-rays in the atmospheric Cherenkov-method to compute the integral or differential sensitivity of your instrument with respect to the gamma-rays energy.
 
+*******
+install
+*******
+
+.. code-block::
+
+    pip install flux_sensitivity_sebastian-achim-mueller
+
 
 ************************
 Differential Sensitivity
