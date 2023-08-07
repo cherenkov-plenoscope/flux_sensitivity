@@ -78,7 +78,7 @@ and matrix ``B`` defines how a scenario takes the rate of background into accoun
 
    R^k[e'] &=& \sum_{e} B^k[e, e'] R[e].
 
-Here ``A^k[e']`` is the area of the signal and ``R^k[e]`` is the rate of background used in scenario ``k``.
+Here ``A^k[e']`` is the area of the signal and ``R^k[e']`` is the rate of background used in scenario ``k``.
 
 Blue
 ----
@@ -98,7 +98,7 @@ But ofcourse the blue scenario falls short when the instrumen's confusion in ene
 +-------------------------------------+--------------------------------------------+
 
 +-------------------------------------+--------------------------------------------+
-| Area for signal                     | Rate of background                         |
+| Area for signal ``A^k[e]``          | Rate of background ``R[e']``               |
 +=====================================+============================================+
 | |img_signal_area_in_scenario_blue|  | |img_background_rate_in_scenario_blue|     |
 +-------------------------------------+--------------------------------------------+
@@ -127,7 +127,7 @@ It is no longer only true gamma-ray-energy.
 +-------------------------------------+--------------------------------------------+
 
 +-------------------------------------+--------------------------------------------+
-| Area for signal                     | Rate of background                         |
+| Area for signal ``A^k[e]``          | Rate of background ``R[e']``               |
 +=====================================+============================================+
 | |img_signal_area_in_scenario_yellow|||img_background_rate_in_scenario_yellow|    |
 +-------------------------------------+--------------------------------------------+
@@ -155,7 +155,7 @@ However, the green scenario is rather conservative in most astronomical applicat
 +-------------------------------------+--------------------------------------------+
 
 +-------------------------------------+--------------------------------------------+
-| Area for signal                     | Rate of background                         |
+| Area for signal ``A^k[e]``          | Rate of background ``R[e']``               |
 +=====================================+============================================+
 | |img_signal_area_in_scenario_green| | |img_background_rate_in_scenario_green|    |
 +-------------------------------------+--------------------------------------------+
@@ -189,7 +189,7 @@ The advantage here is, that matrix ``G`` has only zeros off its diagonal and thu
 +-------------------------------------+--------------------------------------------------------------------------+
 
 +-------------------------------------+--------------------------------------------+
-| Area for signal                     | Rate of background                         |
+| Area for signal ``A^k[e]``          | Rate of background ``R[e']``               |
 +=====================================+============================================+
 | |img_signal_area_in_scenario_black| | |img_background_rate_in_scenario_black|    |
 +-------------------------------------+--------------------------------------------+
