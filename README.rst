@@ -15,9 +15,9 @@ Key features:
 
 Related to:
 
-- https://github.com/cherenkov-plenoscope/lima1983analysis
+- lima1983analysis_
 
-- https://github.com/cherenkov-plenoscope/spectral_energy_distribution_units
+- spectral_energy_distribution_units_
 
 *******
 Install
@@ -262,6 +262,10 @@ A possible input to ``C`` might be:
 
 .. |PyPiStatus| image:: https://img.shields.io/pypi/v/flux-sensitivity-sebastian-achim-mueller
    :target: https://pypi.org/project/flux-sensitivity-sebastian-achim-mueller/
+
+.. _lima1983analysis: https://github.com/cherenkov-plenoscope/lima1983analysis
+
+.. _spectral_energy_distribution_units: https://github.com/cherenkov-plenoscope/spectral_energy_distribution_units
 
 .. |img_irf_background_rate_onregion| image:: flux_sensitivity/tests/resources/cta/plot/irf_background_rate_onregion.jpg
 
