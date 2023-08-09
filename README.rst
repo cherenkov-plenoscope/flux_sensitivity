@@ -85,13 +85,13 @@ Matrix ``G`` defines how a scenario takes the effective area for the signal into
 
 .. math::
 
-   A^k[e'] &=& \sum_{e} G^k[e, e'] A[e],
+   A^k[e'] = \sum_{e} G^k[e, e'] A[e],
 
 and matrix ``B`` defines how a scenario takes the rate of background into account
 
 .. math::
 
-   R^k[e'] &=& \sum_{e} B^k[e, e'] R[e].
+   R^k[e'] = \sum_{e} B^k[e, e'] R[e].
 
 Here ``A^k[e']`` is the area of the signal and ``R^k[e']`` is the rate of background used in scenario ``k``.
 
@@ -234,7 +234,7 @@ One additional source of differences is: The algorithm ``C`` to compute the crit
 After one has estimated the number of background-counts in the on-region ``\hat{N}_B``, one uses algorithm ``C`` to estimate the minimal number of signal-counts in the on-region
 
 .. math::
-    N_S[e'] &=& C(\hat{N}_B[e'], S, \dots)
+    N_S[e'] = C(\hat{N}_B[e'], S, \dots)
 
 which is required to claim a detection.
 A possible input to ``C`` might be:
@@ -267,53 +267,53 @@ A possible input to ``C`` might be:
 
 .. _spectral_energy_distribution_units: https://github.com/cherenkov-plenoscope/spectral_energy_distribution_units
 
-.. |img_irf_background_rate_onregion| image:: flux_sensitivity/tests/resources/cta/plot/irf_background_rate_onregion.jpg
+.. |img_irf_background_rate_onregion| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/irf_background_rate_onregion.jpg?raw=True
 
-.. |img_irf_signal_area| image:: flux_sensitivity/tests/resources/cta/plot/irf_signal_area.jpg
+.. |img_irf_signal_area| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/irf_signal_area.jpg?raw=True
 
-.. |img_irf_probability_reco_given_true| image:: flux_sensitivity/tests/resources/cta/plot/irf_probability_reco_given_true.jpg
-
-
-.. |img_G_matrix_in_scenario_blue| image:: flux_sensitivity/tests/resources/cta/plot/G_matrix_in_scenario_blue.jpg
-
-.. |img_G_matrix_in_scenario_yellow| image:: flux_sensitivity/tests/resources/cta/plot/G_matrix_in_scenario_yellow.jpg
-
-.. |img_G_matrix_in_scenario_green| image:: flux_sensitivity/tests/resources/cta/plot/G_matrix_in_scenario_green.jpg
-
-.. |img_G_matrix_in_scenario_black| image:: flux_sensitivity/tests/resources/cta/plot/G_matrix_in_scenario_black.jpg
+.. |img_irf_probability_reco_given_true| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/irf_probability_reco_given_true.jpg?raw=True
 
 
-.. |img_B_matrix_in_scenario_blue| image:: flux_sensitivity/tests/resources/cta/plot/B_matrix_in_scenario_blue.jpg
+.. |img_G_matrix_in_scenario_blue| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/G_matrix_in_scenario_blue.jpg?raw=True
 
-.. |img_B_matrix_in_scenario_yellow| image:: flux_sensitivity/tests/resources/cta/plot/B_matrix_in_scenario_yellow.jpg
+.. |img_G_matrix_in_scenario_yellow| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/G_matrix_in_scenario_yellow.jpg?raw=True
 
-.. |img_B_matrix_in_scenario_green| image:: flux_sensitivity/tests/resources/cta/plot/B_matrix_in_scenario_green.jpg
+.. |img_G_matrix_in_scenario_green| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/G_matrix_in_scenario_green.jpg?raw=True
 
-.. |img_B_matrix_in_scenario_black| image:: flux_sensitivity/tests/resources/cta/plot/B_matrix_in_scenario_black.jpg
-
-
-.. |img_signal_area_in_scenario_blue| image:: flux_sensitivity/tests/resources/cta/plot/signal_area_in_scenario_blue.jpg
-
-.. |img_signal_area_in_scenario_yellow| image:: flux_sensitivity/tests/resources/cta/plot/signal_area_in_scenario_yellow.jpg
-
-.. |img_signal_area_in_scenario_green| image:: flux_sensitivity/tests/resources/cta/plot/signal_area_in_scenario_green.jpg
-
-.. |img_signal_area_in_scenario_black| image:: flux_sensitivity/tests/resources/cta/plot/signal_area_in_scenario_black.jpg
+.. |img_G_matrix_in_scenario_black| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/G_matrix_in_scenario_black.jpg?raw=True
 
 
-.. |img_background_rate_in_scenario_blue| image:: flux_sensitivity/tests/resources/cta/plot/background_rate_in_scenario_blue.jpg
+.. |img_B_matrix_in_scenario_blue| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/B_matrix_in_scenario_blue.jpg?raw=True
 
-.. |img_background_rate_in_scenario_yellow| image:: flux_sensitivity/tests/resources/cta/plot/background_rate_in_scenario_yellow.jpg
+.. |img_B_matrix_in_scenario_yellow| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/B_matrix_in_scenario_yellow.jpg?raw=True
 
-.. |img_background_rate_in_scenario_green| image:: flux_sensitivity/tests/resources/cta/plot/background_rate_in_scenario_green.jpg
+.. |img_B_matrix_in_scenario_green| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/B_matrix_in_scenario_green.jpg?raw=True
 
-.. |img_background_rate_in_scenario_black| image:: flux_sensitivity/tests/resources/cta/plot/background_rate_in_scenario_black.jpg
+.. |img_B_matrix_in_scenario_black| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/B_matrix_in_scenario_black.jpg?raw=True
 
 
-.. |img_diff_sens_blue| image:: flux_sensitivity/tests/resources/cta/plot/sed_style_portal/differential_sensitivity_blue.jpg
+.. |img_signal_area_in_scenario_blue| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/signal_area_in_scenario_blue.jpg?raw=True
 
-.. |img_diff_sens_yellow| image:: flux_sensitivity/tests/resources/cta/plot/sed_style_portal/differential_sensitivity_yellow.jpg
+.. |img_signal_area_in_scenario_yellow| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/signal_area_in_scenario_yellow.jpg?raw=True
 
-.. |img_diff_sens_green| image:: flux_sensitivity/tests/resources/cta/plot/sed_style_portal/differential_sensitivity_green.jpg
+.. |img_signal_area_in_scenario_green| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/signal_area_in_scenario_green.jpg?raw=True
 
-.. |img_diff_sens_black| image:: flux_sensitivity/tests/resources/cta/plot/sed_style_portal/differential_sensitivity_black.jpg
+.. |img_signal_area_in_scenario_black| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/signal_area_in_scenario_black.jpg?raw=True
+
+
+.. |img_background_rate_in_scenario_blue| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/background_rate_in_scenario_blue.jpg?raw=True
+
+.. |img_background_rate_in_scenario_yellow| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/background_rate_in_scenario_yellow.jpg?raw=True
+
+.. |img_background_rate_in_scenario_green| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/background_rate_in_scenario_green.jpg?raw=True
+
+.. |img_background_rate_in_scenario_black| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/background_rate_in_scenario_black.jpg?raw=True
+
+
+.. |img_diff_sens_blue| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/sed_style_portal/differential_sensitivity_blue.jpg?raw=True
+
+.. |img_diff_sens_yellow| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/sed_style_portal/differential_sensitivity_yellow.jpg?raw=True
+
+.. |img_diff_sens_green| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/sed_style_portal/differential_sensitivity_green.jpg?raw=True
+
+.. |img_diff_sens_black| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/blob/main/flux_sensitivity/tests/resources/cta/plot/sed_style_portal/differential_sensitivity_black.jpg?raw=True
