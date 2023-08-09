@@ -36,7 +36,8 @@ From the response-function we need the following three estimates:
 
 Instrument Response Function
 ============================
-To be precise: This response-function is what I (as a non CTA-member) extracted from the provided documentation. To extract these quantities I interpolate and/or average over e.g. solid angle.
+To be precise: This response-function is what I (as a non CTA-member) extracted from the provided documentation. To extract these quantities I interpolate and/or average over e.g. solid angle. The script ``flux_sensitivity/scripts/read_irf_and_estimate_differential_sensitivity.py`` reads CTA's instrument-response and writes the differential sensitivity for the various scenarios.
+
 We use ``e`` for true gamma-ray-energy and ``e'`` for reconstructed gamma-ray-energy.
 
 Rate of background ``R[e']``
