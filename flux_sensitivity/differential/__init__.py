@@ -202,7 +202,10 @@ def estimate_critical_signal_rate_vs_energy(
 
 
 def apply_scenario_to_signal_effective_area(
-    signal_area_m2, signal_area_m2_au, scenario_G_matrix, scenario_G_matrix_au,
+    signal_area_m2,
+    signal_area_m2_au,
+    scenario_G_matrix,
+    scenario_G_matrix_au,
 ):
     """
     Apply scenario (matrix G) to the signal's effective area.
@@ -247,8 +250,14 @@ def apply_scenario_to_signal_effective_area(
 
         for etrue in range(N):
             tmp[etrue], tmp_au[etrue] = pru.prod(
-                x=[G[etrue, ereco], Atrue[etrue],],
-                x_au=[G_au[etrue, ereco], Atrue_au[etrue],],
+                x=[
+                    G[etrue, ereco],
+                    Atrue[etrue],
+                ],
+                x_au=[
+                    G_au[etrue, ereco],
+                    Atrue_au[etrue],
+                ],
             )
 
         Ascenario[ereco], Ascenario_au[ereco] = pru.sum(x=tmp, x_au=tmp_au)
@@ -306,8 +315,14 @@ def apply_scenario_to_background_rate(
 
         for etrue in range(N):
             tmp[etrue], tmp_au[etrue] = pru.prod(
-                x=[B[ereco, etrue], Rreco[etrue],],
-                x_au=[B_au[ereco, etrue], Rreco_au[etrue],],
+                x=[
+                    B[ereco, etrue],
+                    Rreco[etrue],
+                ],
+                x_au=[
+                    B_au[ereco, etrue],
+                    Rreco_au[etrue],
+                ],
             )
 
         Rscenario[ereco], Rscenario_au[ereco] = pru.sum(x=tmp, x_au=tmp_au)
@@ -361,9 +376,10 @@ def estimate_rate_in_reco_energy(
                 acceptance_m2_sr_au[etrue],
                 dE_GeV_au[etrue],
             ]
-            (_summands[etrue], _summands_au[etrue],) = pru.prod(
-                x=_multiplicands, x_au=_multiplicands_au
-            )
+            (
+                _summands[etrue],
+                _summands_au[etrue],
+            ) = pru.prod(x=_multiplicands, x_au=_multiplicands_au)
         (
             rate_in_reco_energy_per_s[ereco],
             rate_in_reco_energy_per_s_au[ereco],
@@ -407,7 +423,9 @@ def estimate_rate_in_true_energy(
 
 
 def assert_integral_rates_are_similar_in_reco_and_true_energy(
-    rate_in_reco_energy_per_s, rate_in_true_energy_per_s, margin=0.3,
+    rate_in_reco_energy_per_s,
+    rate_in_true_energy_per_s,
+    margin=0.3,
 ):
     """
     Integral rate over all energy-bins must not change (much) under

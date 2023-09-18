@@ -14,7 +14,7 @@ def average_field_of_view_radial(X, theta_bin_edges_deg, roi_opening_deg):
         theta_start_deg = theta_bin_edges_deg[t]
         theta_stop_deg = theta_bin_edges_deg[t + 1]
         theta_solid_angle_deg2 = np.pi * (
-            theta_stop_deg ** 2 - theta_start_deg ** 2
+            theta_stop_deg**2 - theta_start_deg**2
         )
         theta_deg = 0.5 * (theta_start_deg + theta_stop_deg)
         if theta_deg <= roi_opening_deg:
@@ -89,10 +89,12 @@ def _read_energy_dispersion(hdu):
             high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
         "Mu_bin_edges": bu.merge_low_high_edges(
-            low=hdu.data["MIGRA_LO"][0, :], high=hdu.data["MIGRA_HI"][0, :],
+            low=hdu.data["MIGRA_LO"][0, :],
+            high=hdu.data["MIGRA_HI"][0, :],
         ),
         "theta_bin_edges_deg": bu.merge_low_high_edges(
-            low=hdu.data["THETA_LO"][0, :], high=hdu.data["THETA_HI"][0, :],
+            low=hdu.data["THETA_LO"][0, :],
+            high=hdu.data["THETA_HI"][0, :],
         ),
         "dPdMu_vs_theta": hdu.data["MATRIX  "][0],
     }
@@ -105,7 +107,8 @@ def _read_effective_area(hdu):
             high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
         "theta_bin_edges_deg": bu.merge_low_high_edges(
-            low=hdu.data["THETA_LO"][0, :], high=hdu.data["THETA_HI"][0, :],
+            low=hdu.data["THETA_LO"][0, :],
+            high=hdu.data["THETA_HI"][0, :],
         ),
         "area_vs_theta_m2": hdu.data["EFFAREA"][0],
     }
@@ -119,10 +122,12 @@ def _read_background(hdu):
             high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
         "detx_bin_edges_deg": bu.merge_low_high_edges(
-            low=hdu.data["DETX_LO"][0, :], high=hdu.data["DETX_HI"][0, :],
+            low=hdu.data["DETX_LO"][0, :],
+            high=hdu.data["DETX_HI"][0, :],
         ),
         "dety_bin_edges_deg": bu.merge_low_high_edges(
-            low=hdu.data["DETY_LO"][0, :], high=hdu.data["DETY_HI"][0, :],
+            low=hdu.data["DETY_LO"][0, :],
+            high=hdu.data["DETY_HI"][0, :],
         ),
         "background_vs_detx_vs_dety_per_s_per_sr_per_GeV": per_MeV_to_per_GeV
         * hdu.data["BKG"][0],
@@ -136,7 +141,8 @@ def _read_point_spread_function(hdu):
             high=hdu.data["ENERG_HI"][0, :] * 1e3,
         ),
         "theta_bin_edges_deg": bu.merge_low_high_edges(
-            low=hdu.data["THETA_LO"][0, :], high=hdu.data["THETA_HI"][0, :],
+            low=hdu.data["THETA_LO"][0, :],
+            high=hdu.data["THETA_HI"][0, :],
         ),
         "sigma_vs_theta_deg": hdu.data["SIGMA_1"][0],
     }
@@ -193,7 +199,10 @@ def average_instrument_response_over_field_of_view(irf, roi_opening_deg):
 
 
 def integrate_dPdMu_to_get_probability_reco_given_true(
-    dPdMu, dPdMu_energy_bin_edges, dPdMu_Mu_bin_edges, energy_bin_edges,
+    dPdMu,
+    dPdMu_energy_bin_edges,
+    dPdMu_Mu_bin_edges,
+    energy_bin_edges,
 ):
     """
     Convert a dispersion-matrux dPdMu to a conditional probability-matrix.
@@ -259,7 +268,6 @@ def integrate_dPdMu_to_get_probability_reco_given_true(
 
     for r in range(J):
         for t in range(J):
-
             Etrue_center = energy_bin_centers[t]
             Ereco_start = energy_bin_edges[r]
             Ereco_stop = energy_bin_edges[r + 1]

@@ -58,7 +58,9 @@ def init_matrix_B(probability_reco_given_true, containment=0.68):
 
 
 def next_containment_and_weight(
-    accumulated_containment, bin_containment, target_containment,
+    accumulated_containment,
+    bin_containment,
+    target_containment,
 ):
     assert 0 <= accumulated_containment <= 1
     assert 0 <= bin_containment <= 1

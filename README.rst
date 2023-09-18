@@ -1,7 +1,7 @@
 ###########################################
 Estimate the Sensitivity of your Instrument
 ###########################################
-|TestStatus| |PyPiStatus| |BlackStyle| 
+|TestStatus| |PyPiStatus| |BlackStyle|
 
 Made for astronomy with gamma-rays in the atmospheric Cherenkov-method to compute the integral or differential sensitivity of your instrument with respect to the gamma-rays energy.
 
@@ -258,10 +258,10 @@ A possible input to ``C`` might be:
     :target: https://github.com/psf/black
 
 .. |TestStatus| image:: https://github.com/cherenkov-plenoscope/flux_sensitivity/actions/workflows/test.yml/badge.svg?branch=main
-   :target: https://github.com/cherenkov-plenoscope/flux_sensitivity/actions/workflows/test.yml
+    :target: https://github.com/cherenkov-plenoscope/flux_sensitivity/actions/workflows/test.yml
 
-.. |PyPiStatus| image:: https://img.shields.io/pypi/v/flux-sensitivity-sebastian-achim-mueller
-   :target: https://pypi.org/project/flux-sensitivity-sebastian-achim-mueller/
+.. |PyPiStatus| image:: https://img.shields.io/pypi/v/flux_sensitivity_sebastian-achim-mueller
+    :target: https://pypi.org/project/flux_sensitivity_sebastian-achim-mueller
 
 .. _lima1983analysis: https://github.com/cherenkov-plenoscope/lima1983analysis
 

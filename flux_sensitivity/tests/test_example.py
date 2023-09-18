@@ -7,7 +7,11 @@ from astropy.io import fits
 
 
 RESOURCE_DIR = pkg_resources.resource_filename(
-    "flux_sensitivity", os.path.join("tests", "resources",)
+    "flux_sensitivity",
+    os.path.join(
+        "tests",
+        "resources",
+    ),
 )
 
 

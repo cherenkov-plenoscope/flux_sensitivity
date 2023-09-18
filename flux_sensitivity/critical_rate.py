@@ -65,11 +65,17 @@ def estimate_critical_signal_rate(
 
     if estimator_statistics == "sqrt":
         N_S_stat, N_S_stat_au = estimator_sqrt(
-            N_off=N_off, N_off_au=N_off_au, alpha=alpha, S=S,
+            N_off=N_off,
+            N_off_au=N_off_au,
+            alpha=alpha,
+            S=S,
         )
     elif estimator_statistics == "LiMaEq9":
         N_S_stat, N_S_stat_au = estimator_lima1983analysis_N_s_eq9(
-            N_off=N_off, N_off_au=N_off_au, alpha=alpha, S=S,
+            N_off=N_off,
+            N_off_au=N_off_au,
+            alpha=alpha,
+            S=S,
         )
     elif estimator_statistics == "LiMaEq17":
         N_S_stat, N_S_stat_au = estimator_lima1983analysis_N_s_eq17(

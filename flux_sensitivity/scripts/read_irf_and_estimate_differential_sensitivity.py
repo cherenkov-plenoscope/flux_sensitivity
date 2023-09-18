@@ -26,7 +26,10 @@ parser.add_argument(
     ),
 )
 parser.add_argument(
-    "out_dir", metavar="OUT_DIR", type=str, help="writes the output here.",
+    "out_dir",
+    metavar="OUT_DIR",
+    type=str,
+    help="writes the output here.",
 )
 
 parser.add_argument(
@@ -111,14 +114,19 @@ irf = fs.io.gamma_astro_data.average_instrument_response_over_field_of_view(
 )
 
 energy_bin_edges_GeV = fs.io.gamma_astro_data.find_common_energy_bin_edges(
-    components=irf, num_bins_per_decade=CONFIG["num_bins_per_decade"],
+    components=irf,
+    num_bins_per_decade=CONFIG["num_bins_per_decade"],
 )
 
-probability_reco_given_true = fs.io.gamma_astro_data.integrate_dPdMu_to_get_probability_reco_given_true(
-    dPdMu=irf["energy_dispersion"]["dPdMu"],
-    dPdMu_energy_bin_edges=irf["energy_dispersion"]["energy_bin_edges_GeV"],
-    dPdMu_Mu_bin_edges=irf["energy_dispersion"]["Mu_bin_edges"],
-    energy_bin_edges=energy_bin_edges_GeV,
+probability_reco_given_true = (
+    fs.io.gamma_astro_data.integrate_dPdMu_to_get_probability_reco_given_true(
+        dPdMu=irf["energy_dispersion"]["dPdMu"],
+        dPdMu_energy_bin_edges=irf["energy_dispersion"][
+            "energy_bin_edges_GeV"
+        ],
+        dPdMu_Mu_bin_edges=irf["energy_dispersion"]["Mu_bin_edges"],
+        energy_bin_edges=energy_bin_edges_GeV,
+    )
 )
 probability_reco_given_true_au = np.zeros(probability_reco_given_true.shape)
 
@@ -143,10 +151,12 @@ point_spread_function_sigma_deg = np.interp(
     fp=irf["point_spread_function"]["sigma_deg"],
 )
 
-background_rate_onregion_per_s = fs.io.gamma_astro_data.integrate_background_rate_in_onregion(
-    background_per_s_per_sr_per_GeV=background_per_s_per_sr_per_GeV,
-    point_spread_function_sigma_deg=point_spread_function_sigma_deg,
-    energy_bin_edges_GeV=energy_bin_edges_GeV,
+background_rate_onregion_per_s = (
+    fs.io.gamma_astro_data.integrate_background_rate_in_onregion(
+        background_per_s_per_sr_per_GeV=background_per_s_per_sr_per_GeV,
+        point_spread_function_sigma_deg=point_spread_function_sigma_deg,
+        energy_bin_edges_GeV=energy_bin_edges_GeV,
+    )
 )
 background_rate_onregion_per_s_au = np.zeros(
     background_rate_onregion_per_s.shape
@@ -169,10 +179,12 @@ scenario_dir = os.path.join(out_dir, "scenarios")
 os.makedirs(scenario_dir, exist_ok=True)
 
 for scenario_key in fs.differential.SCENARIOS:
-    scenario = fs.differential.init_scenario_matrices_for_signal_and_background(
-        probability_reco_given_true=probability_reco_given_true,
-        probability_reco_given_true_au=probability_reco_given_true_au,
-        scenario_key=scenario_key,
+    scenario = (
+        fs.differential.init_scenario_matrices_for_signal_and_background(
+            probability_reco_given_true=probability_reco_given_true,
+            probability_reco_given_true_au=probability_reco_given_true_au,
+            scenario_key=scenario_key,
+        )
     )
 
     (

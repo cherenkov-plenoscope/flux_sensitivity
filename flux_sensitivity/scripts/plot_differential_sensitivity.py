@@ -12,7 +12,8 @@ import binning_utils
 import cosmic_fluxes
 
 parser = argparse.ArgumentParser(
-    prog="plot_differential_sensitivity", description=("Make plots"),
+    prog="plot_differential_sensitivity",
+    description=("Make plots"),
 )
 parser.add_argument(
     "input_dir",
@@ -136,7 +137,9 @@ seb.close(fig)
 fig = seb.figure(plenoirf.summary.figure.FIGURE_STYLE)
 ax = seb.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
 ax.plot(
-    energy_bin["centers"], IRF["signal_area_m2"], "+k",
+    energy_bin["centers"],
+    IRF["signal_area_m2"],
+    "+k",
 )
 ax.set_ylabel("area / m$^{2}$")
 ax.set_xlabel("energy / GeV")
@@ -374,7 +377,6 @@ for dk in flux_sensitivity.differential.SCENARIOS:
         ax = seb.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
 
         for com in components:
-
             for ii in range(len(com["energy"])):
                 _energy, _dFdE = sed.convert_units_with_style(
                     x=com["energy"][ii],

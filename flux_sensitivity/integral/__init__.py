@@ -132,7 +132,6 @@ def estimate_flux_densities_of_critical_power_laws(
     power_law_flux_densities = []
 
     for i, power_law_spectral_index in enumerate(power_law_spectral_indices):
-
         flux_dens = float(upper_flux_density_per_m2_per_GeV_per_s)
 
         iteration = 0
@@ -186,7 +185,7 @@ def _find_intersection_two_lines(b1, m1, b2, m2):
     -------
     x : float
         Intersection of f1(x) and f2(x).
-     """
+    """
     return (b2 - b1) / (m1 - m2)
 
 
@@ -223,11 +222,14 @@ def _estimate_tangent_of_consecutive_power_laws(A_ns, G_ns):
     y = []
     for i in range(num - 1):
         log10_x = _find_intersection_two_lines(
-            b1=log10_A_ns[i], m1=G_ns[i], b2=log10_A_ns[i + 1], m2=G_ns[i + 1],
+            b1=log10_A_ns[i],
+            m1=G_ns[i],
+            b2=log10_A_ns[i + 1],
+            m2=G_ns[i + 1],
         )
         log10_y = log10_A_ns[i] + G_ns[i] * (log10_x)
-        x.append(10 ** log10_x)
-        y.append(10 ** log10_y)
+        x.append(10**log10_x)
+        y.append(10**log10_y)
     return (np.array(x), np.array(y))
 
 
@@ -235,7 +237,8 @@ def estimate_tangent_of_consecutive_power_laws(
     flux_densities, spectral_indices
 ):
     return _estimate_tangent_of_consecutive_power_laws(
-        A_ns=flux_densities, G_ns=spectral_indices,
+        A_ns=flux_densities,
+        G_ns=spectral_indices,
     )
 
 

@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/propagate-uncertainties-sebastian-achim-mueller/
+      url: https://pypi.org/project/flux_sensitivity_sebastian-achim-mueller
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
@@ -30,4 +30,4 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
-        password: ${{ secrets.PYPI_API_FLUX_SENSITIVITY }}
+        password: ${{ secrets.PYPI_API }}
