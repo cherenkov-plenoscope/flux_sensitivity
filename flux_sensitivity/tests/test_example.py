@@ -1,17 +1,15 @@
 import flux_sensitivity
-import pkg_resources
+from importlib import resources as importlib_resources
 import os
 import pandas
 import astropy
 from astropy.io import fits
 
 
-RESOURCE_DIR = pkg_resources.resource_filename(
-    "flux_sensitivity",
-    os.path.join(
-        "tests",
-        "resources",
-    ),
+RESOURCE_DIR = os.path.join(
+    importlib_resources.files("flux_sensitivity"),
+    "tests",
+    "resources",
 )
 
 
