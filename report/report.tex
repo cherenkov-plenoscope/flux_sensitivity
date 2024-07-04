@@ -23,6 +23,7 @@
 \usepackage{lipsum}%
 \usepackage{float}%
 \usepackage{verbatim}%
+\usepackage{natbib}
 \title{
     On Differential Sensitivity in the Atmospheric Cherenkov-Method and Astronomy with Gamma-Rays
 }%
@@ -456,8 +457,39 @@
             \end{eqnarray}
             %
     \section{Literature}
-        \subsection{GAW \citep{cusumano2001gaw}}
-            In section ...
+        In general, I have a problem with most literature showing the diff. sensitivity and its inputs as smooth curves,
+        or as points connected by lines. This disguises the underlying binning in energy. I personally think that the edges of the bins in energy should always be visible in the plots.
+        \subsection{GAW}
+            GAW \citep{cusumano2001gaw}, Section 3. Apparently this shows integral sensitivity only. However, it discusses that it assumes a Crab like spectrum. But why? The spectrum should not matter for integral sensitivity.
+            \begin{itemize}
+                \item Observation time 50h
+                \item requires min. 10 photons per energy bin.
+                \item 5$\sigma$ to claim detection
+                \item Crab-like spectrum ($dN/dE \propto E^{-2.5}$)? But why?
+            \end{itemize}
+        \subsection{5@5}
+            5@5 \citep{aharonian2001}, Section 6, and Figure 22. Unfortunately I can only find digital copies which were messed up by optical character recognition, e.g. $\Delta$ is often shown as `A'.
+            \begin{itemize}
+                \item claims to be free of hadronic background below 100GeV.
+                \item `no need to specify the spectrum of primary y-rays'
+                \item Equation 8 defines the diff. flux sensitivity assuming that only cosmic electrons contribute to the background.
+                \item From equation 8, I assume the statistical estimator is the square root and NOT \citep{li1983analysis}.
+                \item 3$\sigma$ to claim detection
+                \item Observation times: 1h, and 25h
+                \item requires min. 10 photons per energy bin. (p. 352)
+                \item Energy binning: 5 bins per decade what corresponds to $\Delta E = 1/4 E$ and bin edges are [$E-\Delta E$, $E + \Delta E$)
+            \end{itemize}
+        \subsection{CTA 2013}
+            CTA \citep{bernlohr2013monte}, Figure 14, Section 8.1. Probably the most transparent documentation out there.
+            However, it does not discuss how it treats energy dispersion.
+            Excellent: Gives the name of the internal analysis used.
+            \begin{itemize}
+                \item 5$\sigma$ to claim detection.
+                \item Uses Eq. 17 from \citep{li1983analysis} as statistical estimator.
+                \item requires min. 10 photons per energy bin.
+                \item Systematics: gamma excess > 5\% of cosmic ray background.
+                \item Energy binning: 5 bins per decade.
+            \end{itemize}
     \bibliographystyle{apalike}%
     \bibliography{references}%
 \end{document}
