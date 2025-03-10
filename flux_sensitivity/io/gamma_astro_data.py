@@ -1,7 +1,5 @@
 import astropy
 from astropy.io import fits
-import scipy
-from scipy.interpolate import interp2d
 import binning_utils as bu
 import numpy as np
 
