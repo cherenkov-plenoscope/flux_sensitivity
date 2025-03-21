@@ -308,9 +308,9 @@ for dk in flux_sensitivity.differential.SCENARIOS:
         com["differential_flux"] = [
             scale_factor * np.array(crab_flux["differential_flux"]["values"])
         ]
-        com[
-            "label"
-        ] = None  # "{:1.1e} Crab".format(scale_factor) if i == 0 else None
+        com["label"] = (
+            None  # "{:1.1e} Crab".format(scale_factor) if i == 0 else None
+        )
         com["color"] = "k"
         com["alpha"] = 0.25 / (1.0 + i)
         com["linestyle"] = "--"

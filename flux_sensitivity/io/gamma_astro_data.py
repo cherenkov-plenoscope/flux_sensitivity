@@ -176,13 +176,15 @@ def average_instrument_response_over_field_of_view(irf, roi_opening_deg):
         roi_opening_deg=roi_opening_deg,
     )
 
-    irf["background"][
-        "background_per_s_per_sr_per_GeV"
-    ] = average_field_of_view_grid(
-        X=irf["background"]["background_vs_detx_vs_dety_per_s_per_sr_per_GeV"],
-        detx_bin_edges_deg=irf["background"]["detx_bin_edges_deg"],
-        dety_bin_edges_deg=irf["background"]["dety_bin_edges_deg"],
-        roi_opening_deg=roi_opening_deg,
+    irf["background"]["background_per_s_per_sr_per_GeV"] = (
+        average_field_of_view_grid(
+            X=irf["background"][
+                "background_vs_detx_vs_dety_per_s_per_sr_per_GeV"
+            ],
+            detx_bin_edges_deg=irf["background"]["detx_bin_edges_deg"],
+            dety_bin_edges_deg=irf["background"]["dety_bin_edges_deg"],
+            roi_opening_deg=roi_opening_deg,
+        )
     )
 
     irf["point_spread_function"]["sigma_deg"] = average_field_of_view_radial(

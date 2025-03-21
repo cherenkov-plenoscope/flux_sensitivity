@@ -100,9 +100,9 @@ CONFIG["num_bins_per_decade"] = args.num_bins_per_decade
 CONFIG["roi_opening_deg"] = args.roi_opening_deg
 CONFIG["detection_threshold_std"] = args.detection_threshold_std
 CONFIG["estimator_statistics"] = args.estimator_statistics
-CONFIG[
-    "systematic_uncertainty_relative"
-] = args.systematic_uncertainty_relative
+CONFIG["systematic_uncertainty_relative"] = (
+    args.systematic_uncertainty_relative
+)
 CONFIG["observation_time_s"] = args.observation_time_s
 CONFIG["on_over_off_ratio"] = args.on_over_off_ratio
 
@@ -239,12 +239,12 @@ for scenario_key in fs.differential.SCENARIOS:
     out["signal_area_in_scenario_m2"] = signal_area_in_scenario_m2
     out["signal_area_in_scenario_m2_au"] = signal_area_in_scenario_m2_au
 
-    out[
-        "background_rate_onregion_in_scenario_per_s"
-    ] = background_rate_onregion_in_scenario_per_s
-    out[
-        "background_rate_onregion_in_scenario_per_s_au"
-    ] = background_rate_onregion_in_scenario_per_s_au
+    out["background_rate_onregion_in_scenario_per_s"] = (
+        background_rate_onregion_in_scenario_per_s
+    )
+    out["background_rate_onregion_in_scenario_per_s_au"] = (
+        background_rate_onregion_in_scenario_per_s_au
+    )
 
     out["dVdE_per_m2_per_GeV_per_s"] = dVdE_per_m2_per_GeV_per_s
     out["dVdE_per_m2_per_GeV_per_s_au"] = dVdE_per_m2_per_GeV_per_s_au
