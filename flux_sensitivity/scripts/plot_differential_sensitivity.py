@@ -4,7 +4,7 @@ import numpy as np
 import plenoirf
 import flux_sensitivity
 import os
-import sebastians_matplotlib_addons as seb
+import sebastians_matplotlib_addons as sebplt
 import spectral_energy_distribution_units as sed
 from plenoirf.analysis import spectral_energy_distribution as sed_styles
 import json_utils
@@ -60,14 +60,14 @@ cta = plenoirf.other_instruments.cherenkov_telescope_array_south
 def fig_add_scenario_marker(
     fig, scenario_key, pos_relative=(0.0, 0.0), size=0.66
 ):
-    ax = seb.add_axes(fig=fig, span=[0, 0, 1, 1], style=seb.AXES_BLANK)
+    ax = sebplt.add_axes(fig=fig, span=[0, 0, 1, 1], style=sebplt.AXES_BLANK)
 
     text_color = "black"
-    if scenario_key in seb.matplotlib.colors.cnames:
+    if scenario_key in sebplt.matplotlib.colors.cnames:
         # use color
         x, y = pos_relative
 
-        c = seb.matplotlib.colors.cnames[scenario_key]
+        c = sebplt.matplotlib.colors.cnames[scenario_key]
         rgb = np.array([int(c[1:3], 16), int(c[3:5], 16), int(c[5:7], 16)])
         argb = 255 - rgb
         alum = np.sum(argb) / 3
@@ -108,9 +108,9 @@ def fig_add_scenario_marker(
 # irf
 # ===
 
-fig = seb.figure(plenoirf.summary.figure.FIGURE_STYLE)
-ax = seb.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
-seb.ax_add_histogram(
+fig = sebplt.figure(plenoirf.summary.figure.FIGURE_STYLE)
+ax = sebplt.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
+sebplt.ax_add_histogram(
     ax=ax,
     bin_edges=energy_bin["edges"],
     bincounts=AA["irf"]["background_rate_onregion_per_s"],
@@ -131,11 +131,11 @@ ax.set_xlabel("reco. energy / GeV")
 ax.set_ylim(y_lim_background_rate)
 ax.loglog()
 fig.savefig(os.path.join(out_dir, "irf_background_rate_onregion.jpg"))
-seb.close(fig)
+sebplt.close(fig)
 
 
-fig = seb.figure(plenoirf.summary.figure.FIGURE_STYLE)
-ax = seb.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
+fig = sebplt.figure(plenoirf.summary.figure.FIGURE_STYLE)
+ax = sebplt.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
 ax.plot(
     energy_bin["centers"],
     IRF["signal_area_m2"],
@@ -146,29 +146,29 @@ ax.set_xlabel("energy / GeV")
 ax.set_ylim(y_lim_gamma_area)
 ax.loglog()
 fig.savefig(os.path.join(out_dir, "irf_signal_area.jpg"))
-seb.close(fig)
+sebplt.close(fig)
 
 
-fig = seb.figure(seb.FIGURE_1_1)
-ax_c = seb.add_axes(fig=fig, span=[0.16, 0.16, 0.7, 0.7])
-ax_cb = seb.add_axes(fig=fig, span=[0.88, 0.16, 0.02, 0.7])
+fig = sebplt.figure(sebplt.FIGURE_1_1)
+ax_c = sebplt.add_axes(fig=fig, span=[0.16, 0.16, 0.7, 0.7])
+ax_cb = sebplt.add_axes(fig=fig, span=[0.88, 0.16, 0.02, 0.7])
 _pcm_confusion = ax_c.pcolormesh(
     energy_bin["edges"],
     energy_bin["edges"],
     np.transpose(AA["irf"]["probability_reco_given_true"]),
     cmap="Greys",
-    norm=seb.plt_colors.PowerNorm(gamma=0.5),
+    norm=sebplt.plt_colors.PowerNorm(gamma=0.5),
     vmin=0,
     vmax=1,
 )
 ax_c.grid(color="k", linestyle="-", linewidth=0.66, alpha=0.1)
-seb.plt.colorbar(_pcm_confusion, cax=ax_cb, extend="max")
+sebplt.plt.colorbar(_pcm_confusion, cax=ax_cb, extend="max")
 ax_c.set_aspect("equal")
 ax_c.set_ylabel("reco. energy / GeV")
 ax_c.loglog()
 ax_c.set_xlabel("energy / GeV")
 fig.savefig(os.path.join(out_dir, "irf_probability_reco_given_true.jpg"))
-seb.close(fig)
+sebplt.close(fig)
 
 # scenarios
 # =========
@@ -177,13 +177,13 @@ for dk in flux_sensitivity.differential.SCENARIOS:
     elabel = flux_sensitivity.differential.SCENARIOS[dk]["energy_axes_label"]
     SCENARIO = AA["scenarios"][dk]
 
-    fig = seb.figure(plenoirf.summary.figure.FIGURE_STYLE)
+    fig = sebplt.figure(plenoirf.summary.figure.FIGURE_STYLE)
     fig_add_scenario_marker(fig=fig, scenario_key=dk)
-    ax = seb.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
+    ax = sebplt.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
     for ck in COSMIC_RAYS:
         ck_Rt = SCENARIO["background_rate_onregion_in_scenario_per_s"]
         ck_Rt_au = SCENARIO["background_rate_onregion_in_scenario_per_s_au"]
-        seb.ax_add_histogram(
+        sebplt.ax_add_histogram(
             ax=ax,
             bin_edges=energy_bin["edges"],
             bincounts=ck_Rt,
@@ -206,12 +206,12 @@ for dk in flux_sensitivity.differential.SCENARIOS:
             out_dir, "background_rate_in_scenario_{:s}.jpg".format(dk)
         )
     )
-    seb.close(fig)
+    sebplt.close(fig)
 
-    fig = seb.figure(plenoirf.summary.figure.FIGURE_STYLE)
+    fig = sebplt.figure(plenoirf.summary.figure.FIGURE_STYLE)
     fig_add_scenario_marker(fig=fig, scenario_key=dk)
-    ax = seb.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
-    seb.ax_add_histogram(
+    ax = sebplt.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
+    sebplt.ax_add_histogram(
         ax=ax,
         bin_edges=energy_bin["edges"],
         bincounts=SCENARIO["signal_area_in_scenario_m2"],
@@ -241,26 +241,26 @@ for dk in flux_sensitivity.differential.SCENARIOS:
     fig.savefig(
         os.path.join(out_dir, "signal_area_in_scenario_{:s}.jpg".format(dk))
     )
-    seb.close(fig)
+    sebplt.close(fig)
 
     # G_matrix
     # ---------------------------
     G_matrix = SCENARIO["scenario"]["G_matrix"]
-    fig = seb.figure(seb.FIGURE_1_1)
+    fig = sebplt.figure(sebplt.FIGURE_1_1)
     fig_add_scenario_marker(fig=fig, scenario_key=dk)
-    ax_c = seb.add_axes(fig=fig, span=[0.16, 0.16, 0.7, 0.7])
-    ax_cb = seb.add_axes(fig=fig, span=[0.88, 0.16, 0.02, 0.7])
+    ax_c = sebplt.add_axes(fig=fig, span=[0.16, 0.16, 0.7, 0.7])
+    ax_cb = sebplt.add_axes(fig=fig, span=[0.88, 0.16, 0.02, 0.7])
     _pcm_confusion = ax_c.pcolormesh(
         energy_bin["edges"],
         energy_bin["edges"],
         np.transpose(G_matrix),
         cmap="Greys",
-        norm=seb.plt_colors.PowerNorm(gamma=0.5),
+        norm=sebplt.plt_colors.PowerNorm(gamma=0.5),
         vmin=0,
         vmax=1,
     )
     ax_c.grid(color="k", linestyle="-", linewidth=0.66, alpha=0.1)
-    seb.plt.colorbar(_pcm_confusion, cax=ax_cb, extend="max")
+    sebplt.plt.colorbar(_pcm_confusion, cax=ax_cb, extend="max")
     ax_c.set_aspect("equal")
     ax_c.set_ylabel("reco. energy / GeV")
     ax_c.loglog()
@@ -268,26 +268,26 @@ for dk in flux_sensitivity.differential.SCENARIOS:
     fig.savefig(
         os.path.join(out_dir, "G_matrix_in_scenario_{:s}.jpg".format(dk))
     )
-    seb.close(fig)
+    sebplt.close(fig)
 
     # B_matrix
     # --------
     B_matrix = SCENARIO["scenario"]["B_matrix"]
-    fig = seb.figure(seb.FIGURE_1_1)
+    fig = sebplt.figure(sebplt.FIGURE_1_1)
     fig_add_scenario_marker(fig=fig, scenario_key=dk)
-    ax_c = seb.add_axes(fig=fig, span=[0.16, 0.16, 0.7, 0.7])
-    ax_cb = seb.add_axes(fig=fig, span=[0.88, 0.16, 0.02, 0.7])
+    ax_c = sebplt.add_axes(fig=fig, span=[0.16, 0.16, 0.7, 0.7])
+    ax_cb = sebplt.add_axes(fig=fig, span=[0.88, 0.16, 0.02, 0.7])
     _pcm_confusion = ax_c.pcolormesh(
         energy_bin["edges"],
         energy_bin["edges"],
         np.transpose(B_matrix),
         cmap="Greys",
-        norm=seb.plt_colors.PowerNorm(gamma=0.5),
+        norm=sebplt.plt_colors.PowerNorm(gamma=0.5),
         vmin=0,
         vmax=1,
     )
     ax_c.grid(color="k", linestyle="-", linewidth=0.66, alpha=0.1)
-    seb.plt.colorbar(_pcm_confusion, cax=ax_cb, extend="max")
+    sebplt.plt.colorbar(_pcm_confusion, cax=ax_cb, extend="max")
     ax_c.set_aspect("equal")
     ax_c.set_ylabel("reco. energy / GeV")
     ax_c.loglog()
@@ -295,7 +295,7 @@ for dk in flux_sensitivity.differential.SCENARIOS:
     fig.savefig(
         os.path.join(out_dir, "B_matrix_in_scenario_{:s}.jpg".format(dk))
     )
-    seb.close(fig)
+    sebplt.close(fig)
 
     components = []
 
@@ -372,9 +372,9 @@ for dk in flux_sensitivity.differential.SCENARIOS:
         sed_style_dirname = "sed_style_" + sedk
         os.makedirs(os.path.join(out_dir, sed_style_dirname), exist_ok=True)
 
-        fig = seb.figure(plenoirf.summary.figure.FIGURE_STYLE)
+        fig = sebplt.figure(plenoirf.summary.figure.FIGURE_STYLE)
         fig_add_scenario_marker(fig=fig, scenario_key=dk)
-        ax = seb.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
+        ax = sebplt.add_axes(fig=fig, span=plenoirf.summary.figure.AX_SPAN)
 
         for com in components:
             for ii in range(len(com["energy"])):
@@ -439,4 +439,4 @@ for dk in flux_sensitivity.differential.SCENARIOS:
                 "differential_sensitivity_{:s}.jpg".format(dk),
             )
         )
-        seb.close(fig)
+        sebplt.close(fig)
